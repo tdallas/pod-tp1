@@ -1,4 +1,4 @@
-package pod-tp1.client;
+package itba.pod.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

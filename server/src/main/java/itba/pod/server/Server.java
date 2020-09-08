@@ -1,4 +1,4 @@
-package pod-tp1.server;
+package itba.pod.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

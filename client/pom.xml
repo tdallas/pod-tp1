@@ -3,16 +3,16 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>pod-tp1-parent</artifactId>
-    <groupId>pod-tp1</groupId>
+    <groupId>itba.pod</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>pod-tp1</groupId>
-  <artifactId>pod-tp1-server</artifactId>
+  <groupId>itba.pod</groupId>
+  <artifactId>pod-tp1-client</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>pod-tp1-server</name>
+  <name>pod-tp1-client</name>
   <dependencies>
     <dependency>
-      <groupId>pod-tp1</groupId>
+      <groupId>itba.pod</groupId>
       <artifactId>pod-tp1-api</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
