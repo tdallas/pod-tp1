@@ -12,3 +12,4 @@ buildNumber.properties
 .idea/
 pod-tp1.iml
 *.iml
+votes.csv
