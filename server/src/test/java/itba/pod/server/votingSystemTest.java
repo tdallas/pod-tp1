@@ -4,6 +4,7 @@ import itba.pod.api.vote.Candidate;
 import itba.pod.api.vote.Ticket;
 import itba.pod.api.vote.Vote;
 import itba.pod.server.votingSystems.FPTP;
+import itba.pod.server.votingSystems.SPAV;
 import itba.pod.server.votingSystems.STAR;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,24 +16,35 @@ import java.util.Map;
 public class votingSystemTest {
     FPTP f;
     STAR s;
+    SPAV sp;
     @Before
     public void setVotes(){
 
         //STAR
-        Ticket t=new Ticket(5,Candidate.TIGER);
+        Ticket t=new Ticket(5,Candidate.JACKALOPE);
         Ticket t1=new Ticket(3,Candidate.LEOPARD);
         Ticket t2=new Ticket(5,Candidate.LYNX);
         Ticket t3=new Ticket(4,Candidate.BUFFALO​);
 
+        Ticket t4=new Ticket(4,Candidate.TIGER);
+        Ticket t5=new Ticket(3,Candidate.LEOPARD);
+        Ticket t6=new Ticket(2,Candidate.LYNX);
+        Ticket t7=new Ticket(1,Candidate.BUFFALO​);
         List<Ticket> lt=new LinkedList<>();
         lt.add(t);
         lt.add(t1);
         lt.add(t2);
         lt.add(t3);
 
+        List<Ticket> lt2=new LinkedList<>();
+        lt2.add(t4);
+        lt2.add(t5);
+        lt2.add(t6);
+        lt2.add(t7);
+
         //FPTP
         Vote v=new Vote(Candidate.BUFFALO​,lt);
-        Vote v1=new Vote(Candidate.BUFFALO​,lt);
+        Vote v1=new Vote(Candidate.BUFFALO​,lt2);
         Vote v2=new Vote(Candidate.TIGER,lt);
         Vote v3=new Vote(Candidate.LEOPARD,lt);
 
@@ -43,22 +55,29 @@ public class votingSystemTest {
         l.add(v3);
         f=new FPTP(l);
         s=new STAR(l);
+        sp=new SPAV(l);
 
     }
 
     @Test
     public void STARTest(){
-        Map<Candidate, Integer> m=s.scoringRound();
-
-        System.out.println("START Score Counting"+"\n"+m);
-
-        s.automaticRunOff();
+        s.calculateScore();
+        System.out.println("START Score Counting"+"\n"+s.getScoring());
+        System.out.println("First: "+s.getFirstPercentage()+" Second: "+s.getSecondPercentage());
+        System.out.println("START Runoff"+"\n"+s.getRunoff());
 
     }
     @Test
     public void FPTPTest(){
-        Map<Candidate,Double> m=f.result();
-        System.out.println("FPTP"+"\n"+m);
+        f.calculateScore();
+        System.out.println("FPTP"+"\n"+f.getResutls());
+
+    }
+
+    @Test
+    public void SPAVTest(){
+        sp.calculateScore();
+        System.out.println("SPAV"+"\n"+sp.getWinners());
 
     }
 
