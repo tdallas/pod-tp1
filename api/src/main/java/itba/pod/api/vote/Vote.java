@@ -16,6 +16,13 @@ public class Vote {
         FPTPCandidate = fptpCandidate;
     }
 
+    public Vote(Candidate fptpCandidate){
+        this.FPTPCandidate=fptpCandidate;
+        this.province=null;
+        this.table=null;
+        this.tickets=null;
+    }
+
     public Table getTable() {
         return table;
     }
