@@ -1,4 +1,4 @@
-package vote;
+package itba.pod.api.vote;
 
 public class Ticket {
     private final String candidate;
