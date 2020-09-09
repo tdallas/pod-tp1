@@ -1,7 +1,7 @@
 package itba.pod.server.elections;
 
-import itba.pod.api.election.Status;
-import itba.pod.api.vote.Vote;
+import itba.pod.api.model.election.Status;
+import itba.pod.api.model.vote.Vote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

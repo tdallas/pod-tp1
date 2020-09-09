@@ -1,4 +1,4 @@
-package itba.pod.api.election;
+package itba.pod.api.model.election;
 
 public enum Status {
     NOT_INITIALIZED,

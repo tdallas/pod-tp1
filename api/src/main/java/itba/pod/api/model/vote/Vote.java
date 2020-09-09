@@ -1,4 +1,4 @@
-package itba.pod.api.vote;
+package itba.pod.api.model.vote;
 
 import java.util.List;
 
@@ -30,5 +30,10 @@ public class Vote {
 
     public Candidate getFPTPCandidate() {
         return FPTPCandidate;
+    }
+
+    @Override
+    public String toString() {
+        return "Vote for " + FPTPCandidate.toString() + " in table " + table.toString() + " in " + province.toString();
     }
 }
