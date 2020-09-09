@@ -23,6 +23,13 @@ public class Vote {
         this.tickets=null;
     }
 
+    public Vote(Candidate fptpCandidate,List<Ticket> tickets){
+        this.FPTPCandidate=fptpCandidate;
+        this.province=null;
+        this.table=null;
+        this.tickets=tickets;
+    }
+
     public Table getTable() {
         return table;
     }
@@ -38,4 +45,5 @@ public class Vote {
     public Candidate getFPTPCandidate() {
         return FPTPCandidate;
     }
+
 }
