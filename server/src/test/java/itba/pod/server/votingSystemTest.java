@@ -19,10 +19,10 @@ public class votingSystemTest {
     public void setVotes(){
 
         //STAR
-        Ticket t=new Ticket(2,Candidate.TIGER);
+        Ticket t=new Ticket(5,Candidate.TIGER);
         Ticket t1=new Ticket(3,Candidate.LEOPARD);
-        Ticket t2=new Ticket(4,Candidate.LYNX);
-        Ticket t3=new Ticket(5,Candidate.BUFFALO​);
+        Ticket t2=new Ticket(5,Candidate.LYNX);
+        Ticket t3=new Ticket(4,Candidate.BUFFALO​);
 
         List<Ticket> lt=new LinkedList<>();
         lt.add(t);
@@ -49,13 +49,16 @@ public class votingSystemTest {
     @Test
     public void STARTest(){
         Map<Candidate, Integer> m=s.scoringRound();
-        System.out.println(m);
+
+        System.out.println("START Score Counting"+"\n"+m);
+
+        s.automaticRunOff();
 
     }
     @Test
     public void FPTPTest(){
         Map<Candidate,Double> m=f.result();
-        System.out.println(m);
+        System.out.println("FPTP"+"\n"+m);
 
     }
 

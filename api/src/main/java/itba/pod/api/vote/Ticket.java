@@ -20,4 +20,11 @@ public class Ticket {
     public Candidate getCandidate() {
         return candidate;
     }
+
+    @Override
+    public String toString(){
+        return candidate+" "+points;
+    }
+
+
 }
