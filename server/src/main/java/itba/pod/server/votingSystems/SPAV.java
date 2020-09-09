@@ -8,9 +8,9 @@ import org.omg.CORBA.TCKind;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SPAV {
+public class SPAV implements VotingCalculator {
     private List<Vote> votes;
-    private Map<Candidate, Double> winners;
+    //private Map<Candidate, Double> winners;
     private int roundsNumber = 3;
 
     public SPAV(List<Vote> votes) {
@@ -21,16 +21,13 @@ public class SPAV {
         return votes;
     }
 
-    public Map<Candidate, Double> getWinners() {
-        return winners;
-    }
 
     public int getRoundsNumber() {
         return roundsNumber;
     }
 
-    public void calculateScore() {
-        winners = new LinkedHashMap<>();
+    public Map<Candidate, Double> calculateScore() {
+        Map<Candidate, Double> winners = new LinkedHashMap<>();
         Map<Candidate, Double> aux = new LinkedHashMap<>();
         boolean contains = false;
         int m = 0;
@@ -69,5 +66,6 @@ public class SPAV {
             aux.clear();
 
         }
+        return winners;
     }
 }

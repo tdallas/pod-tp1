@@ -61,23 +61,21 @@ public class votingSystemTest {
 
     @Test
     public void STARTest(){
-        s.calculateScore();
+        Map<Candidate,Double> m=s.calculateScore();
         System.out.println("START Score Counting"+"\n"+s.getScoring());
         System.out.println("First: "+s.getFirstPercentage()+" Second: "+s.getSecondPercentage());
-        System.out.println("START Runoff"+"\n"+s.getRunoff());
-
+        System.out.println("START Runoff"+"\n"+m);
     }
+    
     @Test
     public void FPTPTest(){
-        f.calculateScore();
-        System.out.println("FPTP"+"\n"+f.getResutls());
+        System.out.println("FPTP"+"\n"+f.calculateScore());
 
     }
 
     @Test
     public void SPAVTest(){
-        sp.calculateScore();
-        System.out.println("SPAV"+"\n"+sp.getWinners());
+        System.out.println("SPAV"+"\n"+sp.calculateScore());
 
     }
 

@@ -9,12 +9,11 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
-public class STAR {
+public class STAR implements VotingCalculator{
     private List<Vote> votes;
     private Map<Candidate, Integer> scoring;
     private Double firstPercentage;
     private Double secondPercentage;
-    private Map<Candidate,Double> runoff;
 
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
@@ -28,9 +27,7 @@ public class STAR {
         this.votes = votes;
     }
 
-    public Map<Candidate, Double> getRunoff() {
-        return runoff;
-    }
+
 
     public Map<Candidate, Integer> getScoring() {
         return scoring;
@@ -44,11 +41,11 @@ public class STAR {
         return secondPercentage;
     }
 
-    public void calculateScore(){
+    public Map<Candidate,Double> calculateScore(){
         scoringRound();
         automaticRunOff();
 
-        runoff=new LinkedHashMap<>();
+        Map<Candidate,Double> runoff=new LinkedHashMap<>();
         Object[] keys = this.scoring.keySet().toArray();
         Candidate firstCandidate = this.scoring.entrySet().stream().findFirst().get().getKey();
         Candidate secondCandidate = (Candidate) keys[1];
@@ -70,7 +67,7 @@ public class STAR {
                 runoff.put(firstCandidate,firstPercentage);
             }
         }
-
+        return runoff;
     }
 
     private void scoringRound() {
@@ -111,7 +108,6 @@ public class STAR {
         }
         this.firstPercentage =(double)cantFirst/(cantFirst+cantSecond);
         this.secondPercentage =(double)cantSecond/(cantFirst+cantSecond);
-        //System.out.println(first.toString()+" "+this.firstPorcentaje+" "+second.toString()+" "+this.secondPorcentaje);
 
     }
 
