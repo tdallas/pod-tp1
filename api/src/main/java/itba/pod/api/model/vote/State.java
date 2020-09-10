@@ -1,6 +1,6 @@
 package itba.pod.api.model.vote;
 
-public enum Province {
+public enum State {
     JUNGLE,
     SAVANNAH,
     TUNDRA

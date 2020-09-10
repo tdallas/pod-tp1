@@ -9,4 +9,8 @@ public class Results {
     private Status status;
     private List<Map<Candidate,Double>> winners;
 
+    public Results(Status status, List<Map<Candidate, Double>> winners) {
+        this.status = status;
+        this.winners = winners;
+    }
 }
