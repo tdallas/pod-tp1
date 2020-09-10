@@ -8,7 +8,7 @@ public class Ticket {
         this.candidate = candidate;
     }
 
-    public Ticket(final int points, final Candidate candidate) {
+    public Ticket(final Candidate candidate, final int points) {
         this.points = points;
         this.candidate = candidate;
     }

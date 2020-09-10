@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class consultingClientTest {
+public class ConsultingClientTest {
     private ConsultingClient cc;
     private FPTP f;
     private STAR s;
@@ -23,37 +23,37 @@ public class consultingClientTest {
     private Results national;
     private Results not_init;
     private ConsultingClient cl;
+
     @Before
     public void setVotes(){
 
         //STAR
-        Ticket t=new Ticket(5, Candidate.JACKALOPE);
-        Ticket t1=new Ticket(3,Candidate.LEOPARD);
-        Ticket t2=new Ticket(5,Candidate.LYNX);
-        Ticket t3=new Ticket(4,Candidate.BUFFALO​);
+        Ticket t = new Ticket(new Candidate("JACKALOPE"), 5);
+        Ticket t1 = new Ticket(new Candidate("LEOPARD"), 3);
+        Ticket t2 = new Ticket(new Candidate("LYNX"), 5);
+        Ticket t3 = new Ticket(new Candidate("BUFFALO​"), 4);
 
-        Ticket t4=new Ticket(4,Candidate.TIGER);
-        Ticket t5=new Ticket(3,Candidate.LEOPARD);
-        Ticket t6=new Ticket(2,Candidate.LYNX);
-        Ticket t7=new Ticket(1,Candidate.BUFFALO​);
-        List<Ticket> lt=new LinkedList<>();
+        Ticket t4 = new Ticket(new Candidate("TIGER"), 4);
+        Ticket t5 = new Ticket(new Candidate("LEOPARD"), 3);
+        Ticket t6 = new Ticket(new Candidate("LYNX"), 2);
+        Ticket t7 = new Ticket(new Candidate("BUFFALO​"), 1);
+        List<Ticket> lt = new LinkedList<>();
         lt.add(t);
         lt.add(t1);
         lt.add(t2);
         lt.add(t3);
 
-        List<Ticket> lt2=new LinkedList<>();
+        List<Ticket> lt2 = new LinkedList<>();
         lt2.add(t4);
         lt2.add(t5);
         lt2.add(t6);
         lt2.add(t7);
 
         //FPTP
-        Vote v=new Vote(Candidate.BUFFALO​,lt);
-        Vote v1=new Vote(Candidate.BUFFALO​,lt2);
-        Vote v2=new Vote(Candidate.TIGER,lt);
-        Vote v3=new Vote(Candidate.LEOPARD,lt);
-
+        Vote v = new Vote(lt);
+        Vote v1 = new Vote(lt2);
+        Vote v2 = new Vote(lt);
+        Vote v3 = new Vote(lt);
         List<Vote> l=new LinkedList<>();
         l.add(v);
         l.add(v1);
@@ -70,19 +70,19 @@ public class consultingClientTest {
 
     @Test
     public void CSVTestNational() throws IOException, ClientException {
-        cl=new ConsultingClient(null,null);
+//        cl=new ConsultingClient(null,null);
         cl.CSVResults(national,"TestNational");
     }
 
     @Test
     public void CSVTestState() throws IOException, ClientException {
-        cl=new ConsultingClient(null, State.JUNGLE);
+//        cl=new ConsultingClient(null, State.JUNGLE);
         cl.CSVResults(state,"TestState");
     }
 
     @Test
     public void CSVTestTable() throws IOException, ClientException {
-        cl=new ConsultingClient(new Table(1), null);
+//        cl=new ConsultingClient(new Table(1), null);
         cl.CSVResults(tableR,"TestTable");
 
     }

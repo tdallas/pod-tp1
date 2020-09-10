@@ -10,4 +10,11 @@ public class Table {
     public long getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Table{" +
+                "id=" + id +
+                '}';
+    }
 }
