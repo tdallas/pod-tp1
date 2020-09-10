@@ -25,10 +25,10 @@ public class FPTP implements VotingCalculator {
         List<Map<Candidate,Double>> aux=new LinkedList<>();
 
         winners= this.votes.stream().collect(Collectors.groupingBy(Vote::getFPTPCandidate, Collectors.collectingAndThen(Collectors.counting(), c -> c/(double)size)));
-        winners.entrySet().stream()
+
+        aux.add(winners.entrySet().stream()
                 .sorted(Map.Entry.<Candidate,Double>comparingByValue().reversed().thenComparing(t->t.getKey().toString()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new));
-        aux.add(winners);
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new)));
         return aux;
     }
 

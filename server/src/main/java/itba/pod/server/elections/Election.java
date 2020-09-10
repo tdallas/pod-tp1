@@ -79,6 +79,6 @@ public class Election {
         List<Vote> filterStateVotes = new LinkedList<>();
         FPTP f = new FPTP(filterStateVotes);
         return new Results(status, f.calculateScore());
-        
+
     }
 }

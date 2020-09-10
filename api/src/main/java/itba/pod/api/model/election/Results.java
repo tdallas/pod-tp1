@@ -13,4 +13,20 @@ public class Results {
         this.status = status;
         this.winners = winners;
     }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<Map<Candidate, Double>> getWinners() {
+        return winners;
+    }
+
+    public void setWinners(List<Map<Candidate, Double>> winners) {
+        this.winners = winners;
+    }
 }
