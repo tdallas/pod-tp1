@@ -12,8 +12,9 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
 
 public class STAR implements VotingCalculator{
+    //devuelve una lista con un mapa. el primer elemento de la lista es el mapa de scoring, el segundo elemento es el mapa del runoff
     private List<Vote> votes;
-    private Map<Candidate, Integer> scoring;
+    private Map<Candidate, Double> scoring;
     private Double firstPercentage;
     private Double secondPercentage;
 
@@ -31,7 +32,7 @@ public class STAR implements VotingCalculator{
 
 
 
-    public Map<Candidate, Integer> getScoring() {
+    public Map<Candidate, Double> getScoring() {
         return scoring;
     }
 
@@ -43,43 +44,47 @@ public class STAR implements VotingCalculator{
         return secondPercentage;
     }
 
-    public Map<Candidate,Double> calculateScore(){
+    public List<Map<Candidate,Double>> calculateScore(){
         scoringRound();
         automaticRunOff();
 
-        Map<Candidate,Double> runoff=new LinkedHashMap<>();
+        List<Map<Candidate,Double>> runoff=new LinkedList<>();
+        Map<Candidate,Double> aux=new LinkedHashMap<>();
+        runoff.add(scoring);
+
         Object[] keys = this.scoring.keySet().toArray();
         Candidate firstCandidate = this.scoring.entrySet().stream().findFirst().get().getKey();
         Candidate secondCandidate = (Candidate) keys[1];
         if(firstPercentage>secondPercentage){
-            runoff.put(firstCandidate,firstPercentage);
-            runoff.put(secondCandidate,secondPercentage);
+            aux.put(firstCandidate,firstPercentage);
+            aux.put(secondCandidate,secondPercentage);
         }
         else if(secondPercentage<firstPercentage){
-            runoff.put(secondCandidate,secondPercentage);
-            runoff.put(firstCandidate,firstPercentage);
+            aux.put(secondCandidate,secondPercentage);
+            aux.put(firstCandidate,firstPercentage);
         }
         else{
             if(firstCandidate.toString().compareTo(secondCandidate.toString())<0){
-                runoff.put(firstCandidate,firstPercentage);
-                runoff.put(secondCandidate,secondPercentage);
+                aux.put(firstCandidate,firstPercentage);
+                aux.put(secondCandidate,secondPercentage);
             }
             else{
-                runoff.put(secondCandidate,secondPercentage);
-                runoff.put(firstCandidate,firstPercentage);
+                aux.put(secondCandidate,secondPercentage);
+                aux.put(firstCandidate,firstPercentage);
             }
         }
+        runoff.add(aux);
         return runoff;
     }
 
     private void scoringRound() {
-        Map<Candidate, Integer> m ;
-        Map<Candidate, Integer> order = new HashMap<>();
-        Map<Candidate, Integer> rta;
+        Map<Candidate, Double> m ;
+        Map<Candidate, Double> order = new HashMap<>();
+        Map<Candidate, Double> rta;
 
         for (Vote vot : votes) {
-            m = vot.getTickets().stream().collect(groupingBy(Ticket::getCandidate, summingInt(Ticket::getPoints)));
-            m.forEach((k, v) -> order.merge(k, v, Integer::sum));
+            m = vot.getTickets().stream().collect(groupingBy(Ticket::getCandidate, summingDouble(Ticket::getPoints)));
+            m.forEach((k, v) -> order.merge(k, v, Double::sum));
         }
         rta = order.entrySet()
                 .stream()

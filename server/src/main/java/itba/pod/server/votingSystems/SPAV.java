@@ -8,8 +8,10 @@ import itba.pod.api.model.vote.Vote;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SPAV implements VotingCalculator {
+public class SPAV implements VotingCalculator{
+    //devuelv una lista con en el primer lugar el mapa de la primera vuelta, en el segundo, la segunda, en el tercero la tercera
     private List<Vote> votes;
+
     //private Map<Candidate, Double> winners;
     private int roundsNumber = 3;
 
@@ -26,9 +28,10 @@ public class SPAV implements VotingCalculator {
         return roundsNumber;
     }
 
-    public Map<Candidate, Double> calculateScore() {
+    public List<Map<Candidate, Double>> calculateScore() {
         Map<Candidate, Double> winners = new LinkedHashMap<>();
         Map<Candidate, Double> aux = new LinkedHashMap<>();
+        List<Map<Candidate, Double>> rta = new LinkedList<>();
         boolean contains = false;
         int m = 0;
         for (int i = 0; i < roundsNumber; i++) {
@@ -40,7 +43,7 @@ public class SPAV implements VotingCalculator {
                     if (winners.size() != 0) {
                         if (winners.containsKey(t.getCandidate())) {
                             m++;
-                            contains = true;
+
                         }
                     }
                 }
@@ -56,16 +59,15 @@ public class SPAV implements VotingCalculator {
                     }
                 }
                 m = 0;
-                contains = false;
+
             }
             Map<Candidate, Double> newMapSortedByValue = aux.entrySet().stream()
                     .sorted(Map.Entry.<Candidate,Double>comparingByValue().reversed().thenComparing(t->t.getKey().toString()))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new));
-
+            rta.add(newMapSortedByValue);
             winners.put(newMapSortedByValue.entrySet().iterator().next().getKey(),newMapSortedByValue.entrySet().iterator().next().getValue());
             aux.clear();
-
         }
-        return winners;
+        return rta;
     }
 }

@@ -63,8 +63,8 @@ public class votingSystemTest {
 
     @Test
     public void STARTest(){
-        Map<Candidate,Double> m=s.calculateScore();
-        System.out.println("START Score Counting"+"\n"+s.getScoring());
+        List<Map<Candidate,Double>> m=s.calculateScore();
+        System.out.println("STAR Score Counting"+"\n"+s.getScoring());
         System.out.println("First: "+s.getFirstPercentage()+" Second: "+s.getSecondPercentage());
         System.out.println("START Runoff"+"\n"+m);
     }
