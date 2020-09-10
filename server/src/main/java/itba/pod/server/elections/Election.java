@@ -3,6 +3,7 @@ package itba.pod.server.elections;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Results;
 import itba.pod.api.model.election.Status;
+import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.State;
 import itba.pod.api.model.vote.Table;
 import itba.pod.api.model.vote.Vote;
@@ -20,6 +21,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
+import java.util.*;
 
 public class Election {
     private static Logger logger = LoggerFactory.getLogger(Election.class);
@@ -30,6 +32,7 @@ public class Election {
 
     private Status status;
     private List<Vote> votes;
+    private Map<Table, Candidate> tableCandidateMap = new HashMap<>();
 
     public Election() {
         status = Status.NOT_INITIALIZED;
