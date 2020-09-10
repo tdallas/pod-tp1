@@ -1,8 +1,8 @@
 package itba.pod.server;
 
 import itba.pod.server.elections.Election;
-import itba.pod.server.services.AdministrationService;
-import itba.pod.server.services.VotingService;
+import itba.pod.server.services.AdministrationServiceImpl;
+import itba.pod.server.services.VotingServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +23,8 @@ public class Server {
     private static void registerServices() {
         Election election = new Election();
 
-        final AdministrationService administrationService = new AdministrationService(election);
-        final VotingService votingService = new VotingService(election);
+        final AdministrationServiceImpl administrationService = new AdministrationServiceImpl(election);
+        final VotingServiceImpl votingService = new VotingServiceImpl(election);
 
         try {
             final Registry registry = LocateRegistry.getRegistry();

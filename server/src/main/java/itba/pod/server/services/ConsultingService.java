@@ -1,6 +1,5 @@
 package itba.pod.server.services;
 
-import itba.pod.api.interfaces.ConsultingServiceInterface;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Results;
 import itba.pod.api.model.vote.State;
@@ -11,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.rmi.RemoteException;
 
-public class ConsultingService implements ConsultingServiceInterface {
+public class ConsultingService implements itba.pod.api.interfaces.ConsultingService {
     private static final Logger logger = LoggerFactory.getLogger(ConsultingService.class);
 
     private Election election;
