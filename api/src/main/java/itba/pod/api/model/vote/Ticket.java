@@ -1,14 +1,14 @@
 package itba.pod.api.model.vote;
 
 public class Ticket {
-    private final String candidate;
+    private final Candidate candidate;
     private int points;
 
-    public Ticket(final String candidate) {
+    public Ticket(final Candidate candidate) {
         this.candidate = candidate;
     }
 
-    public Ticket(final int points, final String candidate) {
+    public Ticket(final int points, final Candidate candidate) {
         this.points = points;
         this.candidate = candidate;
     }
@@ -17,7 +17,7 @@ public class Ticket {
         return points;
     }
 
-    public String getCandidate() {
+    public Candidate getCandidate() {
         return candidate;
     }
 }
