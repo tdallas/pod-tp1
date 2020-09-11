@@ -1,5 +1,7 @@
 package itba.pod.api.model.vote;
 
+import java.util.Objects;
+
 public class Ticket {
     private final Candidate candidate;
     private int points;
@@ -8,7 +10,7 @@ public class Ticket {
         this.candidate = candidate;
     }
 
-    public Ticket(final int points, final Candidate candidate) {
+    public Ticket(final Candidate candidate, final int points) {
         this.points = points;
         this.candidate = candidate;
     }
@@ -19,5 +21,19 @@ public class Ticket {
 
     public Candidate getCandidate() {
         return candidate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return points == ticket.points &&
+                candidate.equals(ticket.candidate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(candidate, points);
     }
 }
