@@ -16,9 +16,16 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Election {
     private static Logger logger = LoggerFactory.getLogger(Election.class);
+
+    private final ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock(true);
+    private final Lock readLock = reentrantLock.readLock();
+    private final Lock writeLock = reentrantLock.writeLock();
 
     private Status status;
     private List<Vote> votes;
@@ -29,19 +36,41 @@ public class Election {
     }
 
     public Status getStatus() {
-        return status;
+        readLock.lock();
+        final Status statusToReturn = status;
+        readLock.unlock();
+        return statusToReturn;
     }
 
-    public void setStatus(Status status) {
-        // TODO
-    }
-
-    public void emitVote(Vote vote) throws ElectionException {
-        if (status == Status.NOT_INITIALIZED) {
-            throw new ElectionException("Election not initialize");
+    // setStatus(NOT_INITIALIZED) is not a valid flow so there is no need to compute that logic
+    public Status setStatus(final Status status) throws ElectionException {
+        if (getStatus().equals(status)) {
+            // FIXME use custom exception pls
+            throw new ElectionException("Invalid status to set");
+        } else if (getStatus().equals(Status.INITIALIZED) && status.equals(Status.FINISHED)) {
+            return changeElectionStatus(status);
+            // TODO calculate results etc etc
+        } else if (getStatus().equals(Status.NOT_INITIALIZED) && status.equals(Status.INITIALIZED)) {
+            // Does this implies something more than only changing status?
+            return changeElectionStatus(status);
+        } else {
+            // FIXME use custom exception pls
+            throw new ElectionException("Invalid status to set");
         }
-        if (status == Status.FINISHED) {
-            throw new ElectionException("Election finished");
+        // si el status a setear es finalizada --> calculo resultados?
+        // si el status a setear es abiertas (?) --> las abro
+    }
+
+    private Status changeElectionStatus(final Status status) {
+        writeLock.lock();
+        this.status = status;
+        writeLock.unlock();
+        return getStatus();
+    }
+
+    public void emitVote(final Vote vote) throws ElectionException {
+        if (status.equals(Status.NOT_INITIALIZED) || status.equals(Status.FINISHED)) {
+            throw new ElectionException("Election does not admit votes. Status is currently: " + status.toString());
         }
         // TODO
     }

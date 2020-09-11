@@ -1,6 +1,7 @@
 package itba.pod.server.services;
 
 import itba.pod.api.interfaces.AdministrationService;
+import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Status;
 import itba.pod.server.elections.Election;
 import org.slf4j.Logger;
@@ -17,9 +18,9 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
-    public void openElections() throws RemoteException {
-        election.setStatus(Status.INITIALIZED);
+    public Status openElections() throws RemoteException, ElectionException {
         logger.info("Elections opened");
+        return election.setStatus(Status.INITIALIZED);
     }
 
     @Override
@@ -28,8 +29,8 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
-    public void finishElections() throws RemoteException {
-        election.setStatus(Status.FINISHED);
+    public Status finishElections() throws RemoteException, ElectionException {
         logger.info("Elections closed");
+        return election.setStatus(Status.FINISHED);
     }
 }
