@@ -32,11 +32,12 @@ public class Election {
 
     private Status status;
     private List<Vote> votes;
-    private Map<Table, Candidate> tableCandidateMap = new HashMap<>();
+    private Map<Table, Candidate> tableCandidateMap;
 
     public Election() {
-        status = Status.NOT_INITIALIZED;
-        votes = new LinkedList<>();
+        this.status = Status.NOT_INITIALIZED;
+        this.votes = new LinkedList<>();
+        this.tableCandidateMap = new HashMap<>();
     }
 
     public Status getStatus() {

@@ -8,7 +8,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface FiscalizationServiceInterface extends Remote {
-    void register(Table table, Candidate fiscal) throws RemoteException, ElectionException;
+    void register(final Table table, final Candidate fiscal) throws RemoteException, ElectionException;
 
-    String notifyFiscal(Table table, Candidate fiscal) throws RemoteException;
+    void notifyVote(final Table table, final Candidate fiscal) throws RemoteException;
 }
