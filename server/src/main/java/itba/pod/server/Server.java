@@ -2,7 +2,7 @@ package itba.pod.server;
 
 import itba.pod.server.elections.Election;
 import itba.pod.server.services.AdministrationService;
-import itba.pod.server.services.FiscalizationService;
+import itba.pod.server.services.FiscalizationServiceImpl;
 import itba.pod.server.services.VotingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class Server {
 
         final AdministrationService administrationService = new AdministrationService(election);
         final VotingService votingService = new VotingService(election);
-        final FiscalizationService fiscalizationService = new FiscalizationService(election);
+        final FiscalizationServiceImpl fiscalizationService = new FiscalizationServiceImpl(election);
 
         try {
             final Registry registry = LocateRegistry.getRegistry();

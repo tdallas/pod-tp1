@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.*;
 
 public class Election {
-    private static Logger logger = LoggerFactory.getLogger(Election.class);
+    private static final Logger logger = LoggerFactory.getLogger(Election.class);
 
     private final ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock(true);
     private final Lock readLock = reentrantLock.readLock();
@@ -32,12 +32,12 @@ public class Election {
 
     private Status status;
     private List<Vote> votes;
-    private Map<Table, Candidate> tableCandidateMap;
+    private final Map<Long, Table> tables;
 
     public Election() {
         this.status = Status.NOT_INITIALIZED;
         this.votes = new LinkedList<>();
-        this.tableCandidateMap = new HashMap<>();
+        this.tables = new HashMap<>();
     }
 
     public Status getStatus() {
@@ -89,7 +89,7 @@ public class Election {
 
     public Results getNationalResults() throws RemoteException, ElectionException {
         if (status == Status.NOT_INITIALIZED) {
-            throw new ElectionException("Election not initialize");
+            throw new ElectionException("Election not initialized");
         }
         readLock.lock();
         if (status == Status.INITIALIZED) {
@@ -106,7 +106,7 @@ public class Election {
 
     public Results getStateResults(State state) throws RemoteException, ElectionException {
         if (status == Status.NOT_INITIALIZED) {
-            throw new ElectionException("Election not initialize");
+            throw new ElectionException("Election not initialized");
         }
         readLock.lock();
         List<Vote> filterStateVotes = votes
@@ -127,7 +127,7 @@ public class Election {
 
     public Results getTableResults(Table table) throws RemoteException, ElectionException {
         if (status == Status.NOT_INITIALIZED) {
-            throw new ElectionException("Election not initialize");
+            throw new ElectionException("Election not initialized");
         }
         readLock.lock();
         List<Vote> filterStateVotes = votes
@@ -137,5 +137,13 @@ public class Election {
         FPTP f = new FPTP(filterStateVotes);
         readLock.unlock();
         return new Results(status, f.calculateScore());
+    }
+
+    public Map<Long, Table> getTables() {
+        return tables;
+    }
+
+    public Table getTable(final long tableId) {
+        return tables.get(tableId);
     }
 }
