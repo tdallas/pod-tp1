@@ -1,6 +1,7 @@
 package itba.pod.api.model.vote;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Vote {
     private final Table table;
@@ -40,4 +41,15 @@ public class Vote {
     public String toString() {
         return "Vote for " + getFPTPCandidate() + " in table " + table.toString() + " in " + state.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vote vote = (Vote) o;
+        return table != null && state != null && table.equals(vote.table) &&
+                state.equals(vote.state) &&
+                tickets.equals(vote.tickets);
+    }
+
 }

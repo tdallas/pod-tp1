@@ -10,10 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class VotesParser {
-    private final int itemsToParse;
 
-    public VotesParser(int itemsToParse) {
-        this.itemsToParse = itemsToParse;
+    public VotesParser() {
     }
 
     /**
@@ -43,17 +41,18 @@ public class VotesParser {
     }
 
     private List<Ticket> getTickets(final CSVRecord record) {
-        String[] firstThreeSplit = record.get(2).split(",");
-        Ticket firstTicket = getTicket(firstThreeSplit[0]);
-        Ticket secondTicket = getTicket(firstThreeSplit[1]);
-        Ticket thirdTicket = getTicket(firstThreeSplit[2]);
-        Ticket fourthTicket = getTicket(record.get(3));
-        return Arrays.asList(
-                firstTicket,
-                secondTicket,
-                thirdTicket,
-                fourthTicket
-        );
+        String[] ticketsWithPoints = record.get(2).split(",");
+
+        final List<Ticket> tickets = new ArrayList<>(ticketsWithPoints.length + 1);
+
+        for (String ticketsWithPoint : ticketsWithPoints) {
+            tickets.add(getTicket(ticketsWithPoint));
+        }
+
+        final Ticket lastTicket = getTicket(record.get(3));
+        tickets.add(lastTicket);
+
+        return tickets;
     }
 
     private Ticket getTicket(final String ticketString) {
