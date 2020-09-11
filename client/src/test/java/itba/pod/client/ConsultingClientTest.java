@@ -9,20 +9,13 @@ import itba.pod.server.votingSystems.STAR;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ConsultingClientTest {
-    private ConsultingClient cc;
-    private FPTP f;
-    private STAR s;
-    private SPAV sp;
     private Results tableR;
     private Results state;
     private Results national;
-    private Results not_init;
-    private ConsultingClient cl;
 
     @Before
     public void setVotes(){
@@ -59,31 +52,28 @@ public class ConsultingClientTest {
         l.add(v1);
         l.add(v2);
         l.add(v3);
-        f=new FPTP(l);
-        s=new STAR(l);
-        sp=new SPAV(l);
-        tableR=new Results(Status.FINISHED,f.calculateScore());
-        state=new Results(Status.FINISHED,sp.calculateScore());
-        national=new Results(Status.FINISHED,s.calculateScore());
+        FPTP f = new FPTP(l);
+        STAR s = new STAR(l);
+        SPAV sp = new SPAV(l);
+        tableR=new Results(Status.FINISHED, f.calculateScore());
+        state=new Results(Status.FINISHED, sp.calculateScore());
+        national=new Results(Status.FINISHED, s.calculateScore());
 
     }
 
     @Test
-    public void CSVTestNational() throws IOException, ClientException {
-//        cl=new ConsultingClient(null,null);
-        cl.CSVResults(national,"TestNational");
+    public void CSVTestNational() throws ClientException {
+        ConsultingClient.CSVResults(national,"TestNational", null, null);
     }
 
     @Test
-    public void CSVTestState() throws IOException, ClientException {
-//        cl=new ConsultingClient(null, State.JUNGLE);
-        cl.CSVResults(state,"TestState");
+    public void CSVTestState() throws ClientException {
+        ConsultingClient.CSVResults(state,"TestState", "JUNGLE", null);
     }
 
     @Test
-    public void CSVTestTable() throws IOException, ClientException {
-//        cl=new ConsultingClient(new Table(1), null);
-        cl.CSVResults(tableR,"TestTable");
+    public void CSVTestTable() throws ClientException {
+        ConsultingClient.CSVResults(tableR,"TestTable", null, "1");
 
     }
 }
