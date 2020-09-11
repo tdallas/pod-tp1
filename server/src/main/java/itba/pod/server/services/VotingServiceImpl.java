@@ -1,6 +1,7 @@
 package itba.pod.server.services;
 
 import itba.pod.api.interfaces.VotingService;
+import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.vote.Vote;
 import itba.pod.server.elections.Election;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public void emitVote(Vote vote) throws RemoteException {
+    public void emitVote(Vote vote) throws RemoteException, ElectionException {
         logger.debug("Emitting " + vote.toString());
         election.emitVote(vote);
     }

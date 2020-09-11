@@ -36,7 +36,13 @@ public class Election {
         // TODO
     }
 
-    public void emitVote(Vote vote) {
+    public void emitVote(Vote vote) throws ElectionException {
+        if (status == Status.NOT_INITIALIZED) {
+            throw new ElectionException("Election not initialize");
+        }
+        if (status == Status.FINISHED) {
+            throw new ElectionException("Election finished");
+        }
         // TODO
     }
 

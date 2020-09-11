@@ -1,13 +1,14 @@
 package itba.pod.client;
 
 
-import itba.pod.api.interfaces.ConsultingServiceInterface;
+import itba.pod.api.interfaces.ConsultingService;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Results;
 import itba.pod.api.model.election.Status;
 import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.State;
 import itba.pod.api.model.vote.Table;
+import itba.pod.server.services.ConsultingServiceImpl;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +16,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.security.Provider;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,9 +23,7 @@ import static java.lang.System.exit;
 
 public class ConsultingClient {
 
-
-
-    public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
+    public static void main(String[] args) {
         String serverAddress = System.getProperty("serverAddress");
         String stateName = System.getProperty("state");
         String pollingPlaceNumber = System.getProperty("id");
@@ -37,7 +35,7 @@ public class ConsultingClient {
         }
         try {
             Results result;
-            final ConsultingServiceInterface service  = (ConsultingServiceInterface) Naming.lookup("//" + serverAddress + "/consulting-service");
+            final ConsultingService service  = (ConsultingServiceImpl) Naming.lookup("//" + serverAddress + "/consulting-service");
             if(stateName==null && pollingPlaceNumber==null){
                 result=service.getNationalResults();
             }
@@ -58,7 +56,7 @@ public class ConsultingClient {
 
     }
 
-    public static void CSVResults(Results results, String path,String state,String table) throws ClientException {
+    static void CSVResults(Results results, String path, String state, String table) throws ClientException {
         int provinceRounds = 3;
         if (results.getStatus() == Status.NOT_INITIALIZED) {
             throw new ClientException("Election not initialize");
