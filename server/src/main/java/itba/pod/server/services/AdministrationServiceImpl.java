@@ -24,7 +24,7 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
-    public Status consultElectionStatus() {
+    public Status consultElectionStatus() throws RemoteException {
         return election.getStatus();
     }
 

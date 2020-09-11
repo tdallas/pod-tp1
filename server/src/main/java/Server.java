@@ -1,5 +1,3 @@
-package itba.pod.server;
-
 import itba.pod.server.elections.Election;
 import itba.pod.server.services.AdministrationServiceImpl;
 import itba.pod.server.services.ConsultingServiceImpl;
@@ -14,14 +12,25 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Server {
-    private static Logger logger = LoggerFactory.getLogger(Server.class);
+
+    private final static Logger logger = LoggerFactory.getLogger(Server.class);
+
+    private static final int ADMIN_SERVICE_PORT = 10001;
+    private static final int VOTING_SERVICE_PORT = 10002;
+    private static final int CONSULTING_SERVICE_PORT = 10003;
 
     public static void main(String[] args) {
         logger.info("Server Starting ...");
-        registerServices();
+        registerServices(System.getProperty("dockerized") != null);
     }
 
-    private static void registerServices() {
+    /**
+     * This function register every needed service.
+     * If isDockerized is true, then ports are fixed so we can exposed them when building dockerfile
+     *
+     * @param isDockerized
+     */
+    private static void registerServices(final boolean isDockerized) {
         Election election = new Election();
 
         final AdministrationServiceImpl administrationService = new AdministrationServiceImpl(election);
@@ -31,9 +40,17 @@ public class Server {
         try {
             final Registry registry = LocateRegistry.getRegistry();
 
-            final Remote remoteAdministration = UnicastRemoteObject.exportObject(administrationService, 0);
-            final Remote remoteVoting = UnicastRemoteObject.exportObject(votingService, 0);
-            final Remote remoteConsulting = UnicastRemoteObject.exportObject(consultingService, 0);
+            final Remote remoteAdministration = UnicastRemoteObject.exportObject(
+                    administrationService,
+                    isDockerized ? ADMIN_SERVICE_PORT : 0);
+
+            final Remote remoteVoting = UnicastRemoteObject.exportObject(
+                    votingService,
+                    isDockerized ? VOTING_SERVICE_PORT : 0);
+
+            final Remote remoteConsulting = UnicastRemoteObject.exportObject(
+                    consultingService,
+                    isDockerized ? CONSULTING_SERVICE_PORT : 0);
 
             registry.rebind("administration-service", remoteAdministration);
             logger.info("Administration service bound");
@@ -45,6 +62,7 @@ public class Server {
             logger.info("Consulting service bound");
 
         } catch (RemoteException e) {
+            logger.error(e.toString());
             logger.error("Remote exception");
         }
     }
