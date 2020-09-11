@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class FiscalizationServiceImpl implements FiscalizationService {
-    private Election election;
+    private final Election election;
     private final PropertyChangeSupport pcSupport;
 
     public FiscalizationServiceImpl(final Election election) {
