@@ -2,6 +2,7 @@ package itba.pod.server;
 
 import itba.pod.server.elections.Election;
 import itba.pod.server.services.AdministrationServiceImpl;
+import itba.pod.server.services.ConsultingServiceImpl;
 import itba.pod.server.services.VotingServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +26,23 @@ public class Server {
 
         final AdministrationServiceImpl administrationService = new AdministrationServiceImpl(election);
         final VotingServiceImpl votingService = new VotingServiceImpl(election);
+        final ConsultingServiceImpl consultingService = new ConsultingServiceImpl(election);
 
         try {
             final Registry registry = LocateRegistry.getRegistry();
 
             final Remote remoteAdministration = UnicastRemoteObject.exportObject(administrationService, 0);
             final Remote remoteVoting = UnicastRemoteObject.exportObject(votingService, 0);
+            final Remote remoteConsulting = UnicastRemoteObject.exportObject(consultingService, 0);
 
             registry.rebind("administration-service", remoteAdministration);
             logger.info("Administration service bound");
 
             registry.rebind("voting-service", remoteVoting);
             logger.info("Voting service bound");
+
+            registry.rebind("consulting-service", remoteConsulting);
+            logger.info("Consulting service bound");
 
         } catch (RemoteException e) {
             logger.error("Remote exception");
