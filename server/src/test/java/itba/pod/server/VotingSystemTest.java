@@ -32,7 +32,7 @@ public class VotingSystemTest {
         Ticket t4 = new Ticket(new Candidate("TIGER"), 4);
         Ticket t5 = new Ticket(new Candidate("LEOPARD"), 3);
         Ticket t6 = new Ticket(new Candidate("LYNX"), 2);
-        Ticket t7 = new Ticket(new Candidate("BUFFALO​"), 1);
+        Ticket t7 = new Ticket(new Candidate("OWL"), 1);
         List<Ticket> lt = new LinkedList<>();
         lt.add(t);
         lt.add(t1);
@@ -65,7 +65,7 @@ public class VotingSystemTest {
     @Test
     public void STARTest() {
         List<Map<Candidate, Double>> m = s.calculateScore();
-        System.out.println("STAR Score Counting" + "\n" + s.getScoring());
+        System.out.println("START Runoff" + "\n" + s.getScoring());
         System.out.println("First: " + s.getFirstPercentage() + " Second: " + s.getSecondPercentage());
         System.out.println("START Runoff" + "\n" + m);
     }

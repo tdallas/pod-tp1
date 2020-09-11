@@ -29,7 +29,7 @@ public class ConsultingClientTest {
         Ticket t4 = new Ticket(new Candidate("TIGER"), 4);
         Ticket t5 = new Ticket(new Candidate("LEOPARD"), 3);
         Ticket t6 = new Ticket(new Candidate("LYNX"), 2);
-        Ticket t7 = new Ticket(new Candidate("BUFFALO​"), 1);
+        Ticket t7 = new Ticket(new Candidate("OWL"), 1);
         List<Ticket> lt = new LinkedList<>();
         lt.add(t);
         lt.add(t1);

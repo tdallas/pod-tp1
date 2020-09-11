@@ -31,7 +31,6 @@ public class STAR implements VotingCalculator{
     }
 
 
-
     public Map<Candidate, Double> getScoring() {
         return scoring;
     }
@@ -103,12 +102,12 @@ public class STAR implements VotingCalculator{
         int cantSecond = 0;
         Map<Candidate, Integer> rta = new HashMap<>();
         for (Vote vot : votes) {
-            List<Ticket> l = vot.getTickets().stream().filter(t -> t.getCandidate() == first || t.getCandidate() == second).sorted(Comparator.comparing(Ticket::getPoints).reversed().thenComparing(t->t.getCandidate().toString())).collect(Collectors.toList());
+            List<Ticket> l = vot.getTickets().stream().filter(t -> t.getCandidate().equals(first) || t.getCandidate().equals(second)).sorted(Comparator.comparing(Ticket::getPoints).reversed().thenComparing(t->t.getCandidate().toString())).collect(Collectors.toList());
 
             if (l.size() != 0) {
-                if (l.get(0).getCandidate() == first) {
+                if (l.get(0).getCandidate().equals(first)) {
                     cantFirst++;
-                } else if (l.get(0).getCandidate() == second) {
+                } else if (l.get(0).getCandidate().equals(second)) {
                     cantSecond++;
                 }
             }

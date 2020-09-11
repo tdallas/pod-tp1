@@ -20,4 +20,13 @@ public class Candidate {
         Candidate candidate = (Candidate) o;
         return Objects.equals(name, candidate.name);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(name);
+    }
 }
