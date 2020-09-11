@@ -5,7 +5,7 @@ import itba.pod.api.model.election.Status;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface AdministrationServiceInterface extends Remote {
+public interface AdministrationService extends Remote {
 
     void openElections() throws RemoteException;
 
