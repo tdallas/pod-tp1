@@ -1,8 +1,9 @@
 package itba.pod.client;
 
 import com.beust.jcommander.JCommander;
+import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.Table;
-import itba.pod.server.services.FiscalizationServiceImpl;
+import itba.pod.server.services.FiscalizationService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -38,10 +39,10 @@ public class FiscalizationClient implements PropertyChangeListener {
     }
 
     private void run() {
-        final FiscalizationServiceImpl fiscal;
+        final FiscalizationService fiscal;
 
         try {
-            fiscal = (FiscalizationServiceImpl) Naming.lookup(address);
+            fiscal = (FiscalizationService) Naming.lookup(address);
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
             logger.info("RMI failure while requesting the fiscalization service: " + e);
         }
