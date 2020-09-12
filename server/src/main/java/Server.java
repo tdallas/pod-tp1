@@ -19,7 +19,9 @@ public class Server {
     private static final int VOTING_SERVICE_PORT = 10002;
     private static final int CONSULTING_SERVICE_PORT = 10003;
 
-    public static void main(String[] args) {
+    private static final int DEFAULT_REGISTRY_PORT = 1099;
+
+    public static void main(String[] args) throws RemoteException {
         logger.info("Server Starting ...");
         registerServices(System.getProperty("dockerized") != null);
     }
@@ -31,14 +33,17 @@ public class Server {
      * @param isDockerized
      */
     private static void registerServices(final boolean isDockerized) {
-        Election election = new Election();
+        final Election election = new Election();
+
+        int registryPort = System.getProperty("registryPort") != null ?
+                Integer.parseInt(System.getProperty("registryPort")) : DEFAULT_REGISTRY_PORT;
 
         final AdministrationServiceImpl administrationService = new AdministrationServiceImpl(election);
         final VotingServiceImpl votingService = new VotingServiceImpl(election);
         final ConsultingServiceImpl consultingService = new ConsultingServiceImpl(election);
 
         try {
-            final Registry registry = LocateRegistry.getRegistry();
+            final Registry registry = LocateRegistry.createRegistry(registryPort);
 
             final Remote remoteAdministration = UnicastRemoteObject.exportObject(
                     administrationService,
