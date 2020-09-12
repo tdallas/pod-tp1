@@ -22,7 +22,6 @@ public class FiscalizationServiceImpl implements FiscalizationService {
     @Override
     public void register(final long tableId, final Candidate fiscal) throws ElectionException {
         if (election.getStatus() == Status.INITIALIZED || election.getStatus() == Status.FINISHED) {
-            // TODO: Change this to a reasonable exception
             throw new ElectionException("No new fiscal can be registered after the start of the election");
         }
 
@@ -34,10 +33,12 @@ public class FiscalizationServiceImpl implements FiscalizationService {
     }
 
     @Override
+    // TODO: Change this to listen for changes in the election instance
     public void notifyVote(final long tableId, final Candidate fiscal) {
         if (election.getTable(tableId).hasRegisteredFiscal(fiscal)) {
-            final String voteNotification = "New vote for " + fiscal.name() + " on polling place " + tableId;
+            final String voteNotification = "New vote for " + fiscal.getName() + " on polling place " + tableId;
 
+            // TODO: Change this to avoid firing (making oldValue = newValue) unless the table has notified a new vote.
             pcSupport.firePropertyChange("election", null, voteNotification);
         }
     }

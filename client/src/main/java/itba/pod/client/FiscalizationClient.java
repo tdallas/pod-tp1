@@ -1,6 +1,8 @@
 package itba.pod.client;
 
 import com.beust.jcommander.JCommander;
+import itba.pod.api.model.election.ElectionException;
+import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.Table;
 import itba.pod.server.services.FiscalizationServiceImpl;
 import org.slf4j.LoggerFactory;
@@ -30,10 +32,14 @@ public class FiscalizationClient implements PropertyChangeListener {
 
         final FiscalizationClient client = new FiscalizationClient();
 
-        JCommander.newBuilder()
-                .addObject(client)
-                .build()
-                .parse(args);
+        try {
+            JCommander.newBuilder()
+                    .addObject(client)
+                    .build()
+                    .parse(args);
+        } catch (NullPointerException e) {
+            logger.info("An error occurred while parsing the command line options: " + e);
+        }
         client.run();
     }
 
@@ -41,17 +47,17 @@ public class FiscalizationClient implements PropertyChangeListener {
         final FiscalizationServiceImpl fiscal;
 
         try {
-            fiscal = (FiscalizationServiceImpl) Naming.lookup(address);
+            fiscal                = (FiscalizationServiceImpl) Naming.lookup(address);
+            final Table table     = new Table(tableId);
+            final Candidate party = new Candidate(partyName);
+
+            fiscal.register(table.getId(), party);
+            fiscal.addPropertyChangeListener(this);
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
             logger.info("RMI failure while requesting the fiscalization service: " + e);
+        } catch (ElectionException e) {
+            logger.info("A problem has occurred while registering a new " + partyName + " fiscal: " + e);
         }
-
-        final Table table = new Table(tableId);
-        // TODO: Change this once the candidate implementation is done
-//        final Candidate party = new Candidate(partyName);
-//
-//        fiscal.register(table, party);
-//        fiscal.addPropertyChangeListener(this);
     }
 
     @Override

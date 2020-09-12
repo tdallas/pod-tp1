@@ -3,7 +3,6 @@ package itba.pod.server.elections;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Results;
 import itba.pod.api.model.election.Status;
-import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.State;
 import itba.pod.api.model.vote.Table;
 import itba.pod.api.model.vote.Vote;
@@ -87,7 +86,7 @@ public class Election {
         logger.info("Now there are {} votes", votes.size());
     }
 
-    public Results getNationalResults() throws RemoteException, ElectionException {
+    public Results getNationalResults() throws ElectionException {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialized");
         }
@@ -104,7 +103,7 @@ public class Election {
         }
     }
 
-    public Results getStateResults(State state) throws RemoteException, ElectionException {
+    public Results getStateResults(State state) throws ElectionException {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialized");
         }
@@ -125,7 +124,7 @@ public class Election {
         }
     }
 
-    public Results getTableResults(Table table) throws RemoteException, ElectionException {
+    public Results getTableResults(Table table) throws ElectionException {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialized");
         }
@@ -145,5 +144,9 @@ public class Election {
 
     public Table getTable(final long tableId) {
         return tables.get(tableId);
+    }
+
+    public void addTable(final long tableId) {
+        this.tables.put(tableId, new Table(tableId));
     }
 }

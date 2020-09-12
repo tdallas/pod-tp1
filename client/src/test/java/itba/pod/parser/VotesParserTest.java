@@ -1,14 +1,13 @@
 package itba.pod.parser;
 
 import itba.pod.api.model.vote.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import static org.junit.Assert.assertEquals;
 
 public class VotesParserTest {
 
@@ -63,14 +62,13 @@ public class VotesParserTest {
                         getClass().getClassLoader().getResource("csv_test.csv")
                 ).getPath()
         );
-        assertEquals("It should have parsed 3 votes", 3, parsedVotes.size());
+        Assertions.assertEquals(3, parsedVotes.size());
         final Vote firstVote = parsedVotes.get(0);
-        assertEquals(expectedFirstVote, firstVote);
+        Assertions.assertEquals(expectedFirstVote, firstVote);
         final Vote secondVote = parsedVotes.get(1);
-        assertEquals(expectedSecondVote, secondVote);
+        Assertions.assertEquals(expectedSecondVote, secondVote);
         final Vote thirdVote = parsedVotes.get(2);
-        assertEquals(expectedThirdVote, thirdVote);
-
+        Assertions.assertEquals(expectedThirdVote, thirdVote);
     }
 
 

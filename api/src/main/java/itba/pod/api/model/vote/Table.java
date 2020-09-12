@@ -3,6 +3,7 @@ package itba.pod.api.model.vote;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Table implements Serializable {
@@ -26,6 +27,10 @@ public class Table implements Serializable {
         return this.fiscalSet.contains(fiscal);
     }
 
+    public Set<Candidate> getFiscalSet() {
+        return this.fiscalSet;
+    }
+
     @Override
     public String toString() {
         return "Table{" +
@@ -43,6 +48,6 @@ public class Table implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this.id);
     }
 }
