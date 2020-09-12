@@ -29,25 +29,22 @@ public class ConsultingClient {
         String pollingPlaceNumber = System.getProperty("id");
         String fileName = System.getProperty("outPath");
 
-        if(stateName!=null && pollingPlaceNumber!=null){
+        if (stateName != null && pollingPlaceNumber != null) {
             System.out.println("Invalid Params (stateName or poolingPlace");
             exit(-1);
         }
         try {
             Results result;
-            final ConsultingService service  = (ConsultingServiceImpl) Naming.lookup("//" + serverAddress + "/consulting-service");
-            if(stateName==null && pollingPlaceNumber==null){
-                result=service.getNationalResults();
+            final ConsultingService service = (ConsultingServiceImpl) Naming.lookup("//" + serverAddress + "/consulting-service");
+            if (stateName == null && pollingPlaceNumber == null) {
+                result = service.getNationalResults();
+            } else if (stateName != null) {
+                result = service.getStateResults(new State(stateName));
+            } else {
+                result = service.getTableResults(new Table(Integer.parseInt(pollingPlaceNumber)));
             }
-            else if(stateName!=null){
-                result=service.getStateResults(new State(stateName));
-            }
-            else {
-                result=service.getTableResults(new Table(Integer.parseInt(pollingPlaceNumber)));
-            }
-            CSVResults(result,fileName,stateName,pollingPlaceNumber);
-        }
-        catch (RemoteException | NotBoundException | MalformedURLException | ElectionException e){
+            CSVResults(result, fileName, stateName, pollingPlaceNumber);
+        } catch (RemoteException | NotBoundException | MalformedURLException | ElectionException e) {
             System.out.println(e.getMessage());
             exit(-1);
         } catch (ClientException e) {
