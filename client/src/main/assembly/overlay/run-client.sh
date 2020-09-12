@@ -1,4 +1,4 @@
 #!/bin/bash
 
-java -cp 'lib/jars/*' "itba.pod.client.Client" $*
+java -cp 'lib/jars/*' "grupo09.client.AdministrationClient" $*
 
