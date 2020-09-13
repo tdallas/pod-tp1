@@ -1,6 +1,7 @@
 package itba.pod.client;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameters;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.Table;
@@ -18,45 +19,56 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class FiscalizationClient implements PropertyChangeListener {
-    @Parameter(names = { "-DserverAddress" })
-    private String address;
-    @Parameter(names = { "-Did" })
-    private long tableId;
-    @Parameter(names = { "-DpartyName" })
-    private String partyName;
 
     private static final Logger logger = LoggerFactory.getLogger(FiscalizationClient.class);
 
-    public static void main(final String[] args)  {
+    @Parameters(separators = "=")
+    private class ArgsParser {
+        @Parameter(names = {"-DserverAddress"})
+        private String address;
+        @Parameter(names = {"-Did"})
+        private long tableId;
+        @Parameter(names = {"-Dparty"})
+        private String partyName;
+
+        private void parse(final String[] args) {
+            try {
+                JCommander.newBuilder()
+                        .addObject(this)
+                        .build()
+                        .parse(args);
+            } catch (NullPointerException e) {
+                logger.info("An error occurred while parsing the command line options: " + e);
+            }
+        }
+    }
+
+    public static void main(final String[] args) {
         logger.info("Fiscalization client starting...");
 
         final FiscalizationClient client = new FiscalizationClient();
 
-        try {
-            JCommander.newBuilder()
-                    .addObject(client)
-                    .build()
-                    .parse(args);
-        } catch (NullPointerException e) {
-            logger.info("An error occurred while parsing the command line options: " + e);
-        }
-        client.run();
+        client.run(args);
     }
 
-    private void run() {
+    private void run(final String[] args) {
+        final ArgsParser parser = new ArgsParser();
+
+        parser.parse(args);
+
         final FiscalizationServiceImpl fiscal;
 
         try {
-            fiscal                = (FiscalizationServiceImpl) Naming.lookup(address);
-            final Table table     = new Table(tableId);
-            final Candidate party = new Candidate(partyName);
+            fiscal = (FiscalizationServiceImpl) Naming.lookup(parser.address);
+            final Table table = new Table(parser.tableId);
+            final Candidate party = new Candidate(parser.partyName);
 
             fiscal.register(table.getId(), party);
             fiscal.addPropertyChangeListener(this);
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
             logger.info("RMI failure while requesting the fiscalization service: " + e);
         } catch (ElectionException e) {
-            logger.info("A problem has occurred while registering a new " + partyName + " fiscal: " + e);
+            logger.info("A problem has occurred while registering a new " + parser.partyName + " fiscal: " + e);
         }
     }
 

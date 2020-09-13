@@ -34,7 +34,10 @@ public class FiscalizationServiceImplTest {
     @Test
     public void testRegisterExceptionWhenElectionInitialized() {
         election.addTable(tableId);
-        election.setStatus(Status.INITIALIZED);
+
+        try {
+            election.setStatus(Status.FINISHED);
+        } catch (ElectionException ignored) {}
 
         this.fiscalService  = new FiscalizationServiceImpl(election);
         Exception exception = Assertions.assertThrows(ElectionException.class, () ->
@@ -47,7 +50,10 @@ public class FiscalizationServiceImplTest {
     @Test
     public void testRegisterExceptionWhenElectionFinished() {
         election.addTable(tableId);
-        election.setStatus(Status.FINISHED);
+
+        try {
+            election.setStatus(Status.FINISHED);
+        } catch (ElectionException ignored) {}
 
         this.fiscalService  = new FiscalizationServiceImpl(election);
         Exception exception = Assertions.assertThrows(ElectionException.class, () -> {
