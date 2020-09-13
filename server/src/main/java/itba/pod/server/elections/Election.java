@@ -72,7 +72,14 @@ public class Election {
         if (status.equals(Status.NOT_INITIALIZED) || status.equals(Status.FINISHED)) {
             throw new ElectionException("Election does not admit votes. Status is currently: " + status.toString());
         }
-        // TODO
+        addVote(vote);
+    }
+
+    private void addVote(final Vote vote) {
+        writeLock.lock();
+        this.votes.add(vote);
+        writeLock.unlock();
+        logger.info("Now there are {} votes", votes.size());
     }
 
     public Results getNationalResults() throws RemoteException, ElectionException {

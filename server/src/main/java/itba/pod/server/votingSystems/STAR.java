@@ -1,7 +1,6 @@
 package itba.pod.server.votingSystems;
 
 
-
 import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.Ticket;
 import itba.pod.api.model.vote.Vote;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
-public class STAR implements VotingCalculator{
+public class STAR implements VotingCalculator {
     //devuelve una lista con un mapa. el primer elemento de la lista es el mapa de scoring, el segundo elemento es el mapa del runoff
     private List<Vote> votes;
     private Map<Candidate, Double> scoring;
@@ -43,33 +42,31 @@ public class STAR implements VotingCalculator{
         return secondPercentage;
     }
 
-    public List<Map<Candidate,Double>> calculateScore(){
+    // FIXME clean code pls. I think there must be a better way to do this
+    public List<Map<Candidate, Double>> calculateScore() {
         scoringRound();
         automaticRunOff();
 
-        List<Map<Candidate,Double>> runoff=new LinkedList<>();
-        Map<Candidate,Double> aux=new LinkedHashMap<>();
+        List<Map<Candidate, Double>> runoff = new LinkedList<>();
+        Map<Candidate, Double> aux = new LinkedHashMap<>();
         runoff.add(scoring);
 
         Object[] keys = this.scoring.keySet().toArray();
         Candidate firstCandidate = this.scoring.entrySet().stream().findFirst().get().getKey();
         Candidate secondCandidate = (Candidate) keys[1];
-        if(firstPercentage>secondPercentage){
-            aux.put(firstCandidate,firstPercentage);
-            aux.put(secondCandidate,secondPercentage);
-        }
-        else if(secondPercentage<firstPercentage){
-            aux.put(secondCandidate,secondPercentage);
-            aux.put(firstCandidate,firstPercentage);
-        }
-        else{
-            if(firstCandidate.toString().compareTo(secondCandidate.toString())<0){
-                aux.put(firstCandidate,firstPercentage);
-                aux.put(secondCandidate,secondPercentage);
-            }
-            else{
-                aux.put(secondCandidate,secondPercentage);
-                aux.put(firstCandidate,firstPercentage);
+        if (firstPercentage > secondPercentage) {
+            aux.put(firstCandidate, firstPercentage);
+            aux.put(secondCandidate, secondPercentage);
+        } else if (secondPercentage < firstPercentage) {
+            aux.put(secondCandidate, secondPercentage);
+            aux.put(firstCandidate, firstPercentage);
+        } else {
+            if (firstCandidate.toString().compareTo(secondCandidate.toString()) < 0) {
+                aux.put(firstCandidate, firstPercentage);
+                aux.put(secondCandidate, secondPercentage);
+            } else {
+                aux.put(secondCandidate, secondPercentage);
+                aux.put(firstCandidate, firstPercentage);
             }
         }
         runoff.add(aux);
@@ -77,7 +74,7 @@ public class STAR implements VotingCalculator{
     }
 
     private void scoringRound() {
-        Map<Candidate, Double> m ;
+        Map<Candidate, Double> m;
         Map<Candidate, Double> order = new HashMap<>();
         Map<Candidate, Double> rta;
 
@@ -102,7 +99,7 @@ public class STAR implements VotingCalculator{
         int cantSecond = 0;
         Map<Candidate, Integer> rta = new HashMap<>();
         for (Vote vot : votes) {
-            List<Ticket> l = vot.getTickets().stream().filter(t -> t.getCandidate().equals(first) || t.getCandidate().equals(second)).sorted(Comparator.comparing(Ticket::getPoints).reversed().thenComparing(t->t.getCandidate().toString())).collect(Collectors.toList());
+            List<Ticket> l = vot.getTickets().stream().filter(t -> t.getCandidate().equals(first) || t.getCandidate().equals(second)).sorted(Comparator.comparing(Ticket::getPoints).reversed().thenComparing(t -> t.getCandidate().toString())).collect(Collectors.toList());
 
             if (l.size() != 0) {
                 if (l.get(0).getCandidate().equals(first)) {
@@ -112,8 +109,8 @@ public class STAR implements VotingCalculator{
                 }
             }
         }
-        this.firstPercentage =(double)cantFirst/(cantFirst+cantSecond);
-        this.secondPercentage =(double)cantSecond/(cantFirst+cantSecond);
+        this.firstPercentage = (double) cantFirst / (cantFirst + cantSecond);
+        this.secondPercentage = (double) cantSecond / (cantFirst + cantSecond);
 
     }
 
