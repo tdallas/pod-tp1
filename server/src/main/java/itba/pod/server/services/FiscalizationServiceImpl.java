@@ -6,6 +6,8 @@ import itba.pod.api.model.election.Status;
 import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.Table;
 import itba.pod.server.elections.Election;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -13,6 +15,7 @@ import java.beans.PropertyChangeSupport;
 public class FiscalizationServiceImpl implements FiscalizationService {
     private final Election election;
     private final PropertyChangeSupport pcSupport;
+    private static final Logger logger = LoggerFactory.getLogger(FiscalizationServiceImpl.class);
 
     public FiscalizationServiceImpl(final Election election) {
         this.election = election;
@@ -20,16 +23,22 @@ public class FiscalizationServiceImpl implements FiscalizationService {
     }
 
     @Override
-    public void register(final long tableId, final Candidate fiscal) throws ElectionException {
-        if (election.getStatus() == Status.INITIALIZED || election.getStatus() == Status.FINISHED) {
+    public String register(final long tableId, final Candidate fiscal) throws ElectionException {
+        if (election.getStatus() == Status.INITIALIZED || election.getStatus() == Status.FINISHED)
             throw new ElectionException("No new fiscal can be registered after the start of the election");
-        }
+
+        System.out.println("HOLA");
+        logger.info("HOLA");
 
         if (!election.getTables().containsKey(tableId)) {
             election.getTables().put(tableId, new Table(tableId));
+            logger.info("mesa " + tableId);
         }
 
-        election.getTable(tableId).registerFiscal(fiscal);
+        if (election.getTable(tableId).registerFiscal(fiscal))
+            return "Fiscal of " + fiscal.getName() + " registered on polling place " + tableId;
+        else
+            return "There is already a registered fiscal of " + fiscal.getName() + " on polling place " + tableId;
     }
 
     @Override
@@ -43,6 +52,7 @@ public class FiscalizationServiceImpl implements FiscalizationService {
         }
     }
 
+    @Override
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         this.pcSupport.addPropertyChangeListener(listener);
     }

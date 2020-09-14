@@ -7,6 +7,7 @@ import itba.pod.server.votingSystems.FPTP;
 import itba.pod.server.votingSystems.SPAV;
 import itba.pod.server.votingSystems.STAR;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

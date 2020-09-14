@@ -1,7 +1,9 @@
 package itba.pod.client;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
+import itba.pod.api.interfaces.FiscalizationService;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.Table;
@@ -54,16 +56,23 @@ public class FiscalizationClient implements PropertyChangeListener {
     private void run(final String[] args) {
         final ArgsParser parser = new ArgsParser();
 
-        parser.parse(args);
-
-        final FiscalizationServiceImpl fiscal;
-
         try {
-            fiscal = (FiscalizationServiceImpl) Naming.lookup(parser.address);
+            parser.parse(args);
+        } catch (ParameterException | NullPointerException e) {
+            logger.info("Not enough arguments, make sure to pass the server address, the polling place ID and the " +
+                    "fiscal");
+        }
+
+        logger.info("//" + parser.address + "/fiscalization-service");
+        try {
+            final FiscalizationService fiscal = (FiscalizationService) Naming
+                    .lookup("//" + parser.address + "/fiscalization-service");
             final Table table = new Table(parser.tableId);
             final Candidate party = new Candidate(parser.partyName);
+            final String newFiscalRegisteredMsg = fiscal.register(table.getId(), party);
 
-            fiscal.register(table.getId(), party);
+            System.out.println(newFiscalRegisteredMsg);
+
             fiscal.addPropertyChangeListener(this);
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
             logger.info("RMI failure while requesting the fiscalization service: " + e);

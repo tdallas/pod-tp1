@@ -19,8 +19,8 @@ public class Table implements Serializable {
         return this.id;
     }
 
-    public void registerFiscal(final Candidate fiscal) {
-        this.fiscalSet.add(fiscal);
+    public boolean registerFiscal(final Candidate fiscal) {
+        return this.fiscalSet.add(fiscal);
     }
 
     public boolean hasRegisteredFiscal(final Candidate fiscal) {

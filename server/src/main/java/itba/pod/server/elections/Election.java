@@ -39,6 +39,13 @@ public class Election {
         this.tables = new HashMap<>();
     }
 
+    // TODO: Check if it makes sense to keep this constructor just for stubs while testing
+    public Election(final Status newStatus) {
+        this.status = newStatus;
+        this.votes = new LinkedList<>();
+        this.tables = new HashMap<>();
+    }
+
     public Status getStatus() {
         readLock.lock();
         final Status statusToReturn = status;
@@ -47,19 +54,20 @@ public class Election {
     }
 
     // setStatus(NOT_INITIALIZED) is not a valid flow so there is no need to compute that logic
-    public Status setStatus(final Status status) throws ElectionException {
-        if (getStatus().equals(status)) {
+    public Status setStatus(final Status newStatus) throws ElectionException {
+        if (this.status.equals(newStatus)) {
             // FIXME use custom exception pls
             throw new ElectionException("Invalid status to set");
-        } else if (getStatus().equals(Status.INITIALIZED) && status.equals(Status.FINISHED)) {
-            return changeElectionStatus(status);
+        } else if (this.status.equals(Status.INITIALIZED) && newStatus.equals(Status.FINISHED)) {
             // TODO calculate results etc etc
-        } else if (getStatus().equals(Status.NOT_INITIALIZED) && status.equals(Status.INITIALIZED)) {
-            // Does this implies something more than only changing status?
-            return changeElectionStatus(status);
+            return changeElectionStatus(newStatus);
+        } else if (this.status.equals(Status.NOT_INITIALIZED) && newStatus.equals(Status.INITIALIZED)) {
+            // Does this imply something more than only changing status?
+            return changeElectionStatus(newStatus);
         } else {
             // FIXME use custom exception pls
-            throw new ElectionException("Invalid status to set");
+            throw new ElectionException("The election status cannot be forcefully changed from " + this.status +
+                    " to " + newStatus);
         }
         // si el status a setear es finalizada --> calculo resultados?
         // si el status a setear es abiertas (?) --> las abro

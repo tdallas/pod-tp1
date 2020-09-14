@@ -7,7 +7,7 @@ import itba.pod.api.model.vote.Table;
 import itba.pod.server.elections.Election;
 import itba.pod.server.services.FiscalizationServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.beans.PropertyChangeListener;
 
@@ -16,7 +16,7 @@ public class FiscalizationServiceImplTest {
     private final long tableId      = 1234L;
     private final Table table       = new Table(tableId);
     private final Candidate fiscal  = new Candidate("Pepe");
-    private final Election election = new Election();
+    private Election election       = new Election();
 
     @Test
     public void testRegister() {
@@ -24,23 +24,25 @@ public class FiscalizationServiceImplTest {
 
         this.fiscalService = new FiscalizationServiceImpl(election);
 
+        final String expectedMsg = "Fiscal of " + fiscal.getName() + " registered on polling place " + tableId;
+        String actualMsg = "";
+
         try {
-            this.fiscalService.register(table.getId(), fiscal);
+            actualMsg = this.fiscalService.register(table.getId(), fiscal);
         } catch (ElectionException ignored) {}
 
         assert(this.election.getTable(table.getId()).hasRegisteredFiscal(fiscal));
+        assertEquals(actualMsg, expectedMsg);
     }
 
     @Test
     public void testRegisterExceptionWhenElectionInitialized() {
+        election = new Election(Status.FINISHED);
+
         election.addTable(tableId);
 
-        try {
-            election.setStatus(Status.FINISHED);
-        } catch (ElectionException ignored) {}
-
         this.fiscalService  = new FiscalizationServiceImpl(election);
-        Exception exception = Assertions.assertThrows(ElectionException.class, () ->
+        Exception exception = assertThrows(ElectionException.class, () ->
             this.fiscalService.register(table.getId(), fiscal)
         );
 
@@ -49,16 +51,14 @@ public class FiscalizationServiceImplTest {
 
     @Test
     public void testRegisterExceptionWhenElectionFinished() {
+        election = new Election(Status.FINISHED);
+
         election.addTable(tableId);
 
-        try {
-            election.setStatus(Status.FINISHED);
-        } catch (ElectionException ignored) {}
-
         this.fiscalService  = new FiscalizationServiceImpl(election);
-        Exception exception = Assertions.assertThrows(ElectionException.class, () -> {
-            this.fiscalService.register(table.getId(), fiscal);
-        });
+        Exception exception = assertThrows(ElectionException.class, () ->
+            this.fiscalService.register(table.getId(), fiscal)
+        );
 
         System.out.println("Exception thrown: " + exception.getMessage());
     }
