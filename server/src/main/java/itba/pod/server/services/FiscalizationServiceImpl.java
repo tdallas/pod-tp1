@@ -41,7 +41,6 @@ public class FiscalizationServiceImpl implements FiscalizationService {
             return "There is already a registered fiscal of " + fiscal.getName() + " on polling place " + tableId;
     }
 
-    @Override
     // TODO: Change this to listen for changes in the election instance
     public void notifyVote(final long tableId, final Candidate fiscal) {
         if (election.getTable(tableId).hasRegisteredFiscal(fiscal)) {
