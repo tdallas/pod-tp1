@@ -58,7 +58,7 @@ public class Server {
             final Remote remoteConsulting      = UnicastRemoteObject.exportObject(consultingService,
                     isDockerized ? CONSULTING_SERVICE_PORT : 0);
             final Remote remoteFiscalization   = UnicastRemoteObject.exportObject(fiscalizationService,
-                    isDockerized ? CONSULTING_SERVICE_PORT : 0);
+                    isDockerized ? FISCALIZATION_SERVICE_PORT : 0);
 
 
             registry.rebind("administration-service", remoteAdministration);
