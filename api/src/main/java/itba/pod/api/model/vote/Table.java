@@ -1,9 +1,13 @@
 package itba.pod.api.model.vote;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Table {
-    private final long id;
+public class Table implements Serializable {
+    private long id;
+
+    public Table() {
+    }
 
     public Table(long id) {
         this.id = id;

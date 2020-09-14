@@ -1,10 +1,14 @@
 package itba.pod.api.model.vote;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Ticket {
-    private final Candidate candidate;
+public class Ticket implements Serializable {
+    private Candidate candidate;
     private int points;
+
+    public Ticket() {
+    }
 
     public Ticket(final Candidate candidate) {
         this.candidate = candidate;

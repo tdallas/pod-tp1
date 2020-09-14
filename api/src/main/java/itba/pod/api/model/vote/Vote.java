@@ -1,13 +1,17 @@
 package itba.pod.api.model.vote;
 
+import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
-public class Vote {
-    private final Table table;
-    private final State state;
+public class Vote implements Serializable {
+    private Table table;
+    private State state;
     // first 3(i = [0,1,2]) are for STAR and SPAV, the last one is for FPTP
-    private final List<Ticket> tickets;
+    private List<Ticket> tickets;
+
+    public Vote() {
+
+    }
 
     public Vote(final Table table, final State state, final List<Ticket> tickets) {
         this.table = table;
