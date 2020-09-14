@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 public class Election {
     private static Logger logger = LoggerFactory.getLogger(Election.class);
@@ -100,8 +101,10 @@ public class Election {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialize");
         }
-        //TODO filter votes (crear una nueva lista de votos solo con los votes de ese state
-        List<Vote> filterStateVotes = new LinkedList<>();
+        List<Vote> filterStateVotes = votes
+                .stream()
+                .filter(v->v.getState().equals(state))
+                .collect(Collectors.toList());
         if (status == Status.INITIALIZED) {
             //parciales
             FPTP f = new FPTP(filterStateVotes);
@@ -117,8 +120,10 @@ public class Election {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialize");
         }
-        //TODO filter votes (crear una nueva lista de votos solo con la mesa)
-        List<Vote> filterStateVotes = new LinkedList<>();
+        List<Vote> filterStateVotes = votes
+                .stream()
+                .filter(v->v.getTable().equals(table))
+                .collect(Collectors.toList());
         FPTP f = new FPTP(filterStateVotes);
         return new Results(status, f.calculateScore());
 

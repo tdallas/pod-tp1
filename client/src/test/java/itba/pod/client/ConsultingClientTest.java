@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -76,19 +77,21 @@ public class ConsultingClientTest {
     @Test
     public void CSVTestNational() throws ClientException {
         ConsultingClient.CSVResults(national, "TestNational", null, null);
+        List<Map<Candidate,Double>> expected=s.calculateScore();
         //scoring winner
-        assertEquals(lynx, s.calculateScore().get(0).keySet().toArray()[0]);
+        assertEquals(lynx,expected.get(0).keySet().toArray()[0]);
         //runoff winner
-        assertEquals(jackalope, s.calculateScore().get(0).keySet().toArray()[1]);
+        assertEquals(jackalope, expected.get(0).keySet().toArray()[1]);
 
     }
 
     @Test
     public void CSVTestState() throws ClientException {
         ConsultingClient.CSVResults(state, "TestState", "JUNGLE", null);
-        assertEquals(leopard, sp.calculateScore().get(0).keySet().toArray()[0]);
-        assertEquals(lynx, sp.calculateScore().get(0).keySet().toArray()[1]);
-        assertEquals(buffalo, sp.calculateScore().get(0).keySet().toArray()[2]);
+        List<Map<Candidate,Double>> expected=sp.calculateScore();
+        assertEquals(leopard, expected.get(0).keySet().toArray()[0]);
+        assertEquals(lynx, expected.get(0).keySet().toArray()[1]);
+        assertEquals(buffalo, expected.get(0).keySet().toArray()[2]);
         //LEOPARD,LYNX,BUFFALO
     }
 
@@ -99,8 +102,3 @@ public class ConsultingClientTest {
 
     }
 }
-
-
-
-
-

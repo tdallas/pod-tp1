@@ -86,6 +86,7 @@ public class VotingSystemTest {
 
         assertEquals(scoringExpected, m.get(0));
         assertEquals(runoffExpected, m.get(1));
+        System.out.println("START\n"+m);
 
 
     }
@@ -96,11 +97,14 @@ public class VotingSystemTest {
         fptpExpected.put(buffalo,0.75);
         fptpExpected.put(owl,0.25);
         assertEquals(fptpExpected,f.calculateScore().get(0));
+        System.out.println("FPTP\n"+f.calculateScore());
+
 
     }
 
     @Test
     public void SPAVTest() {
+        List<Map<Candidate,Double>> expectd;
         Map<Candidate,Double> firstRunExpected=new LinkedHashMap<>();
         Map<Candidate,Double> secondRunExpected=new LinkedHashMap<>();
         Map<Candidate,Double> thirdRunExpected=new LinkedHashMap<>();
@@ -120,10 +124,11 @@ public class VotingSystemTest {
         thirdRunExpected.put(owl,(double)1/3);
         thirdRunExpected.put(tiger,(double)1/3);
 
-        assertEquals(firstRunExpected,sp.calculateScore().get(0));
-        assertEquals(secondRunExpected,sp.calculateScore().get(1));
-        assertEquals(thirdRunExpected,sp.calculateScore().get(2));
-
+        expectd=sp.calculateScore();
+        assertEquals(firstRunExpected,expectd.get(0));
+        assertEquals(secondRunExpected,expectd.get(1));
+        assertEquals(thirdRunExpected,expectd.get(2));
+        System.out.println("SPAV\n"+expectd);
 
     }
 
