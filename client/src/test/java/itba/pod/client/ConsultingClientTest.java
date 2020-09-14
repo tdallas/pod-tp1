@@ -9,71 +9,98 @@ import itba.pod.server.votingSystems.STAR;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class ConsultingClientTest {
     private Results tableR;
     private Results state;
     private Results national;
 
+    private FPTP f; //mesas
+    private STAR s; //nacionales
+    private SPAV sp; //provincial
+    List<Vote> l = new LinkedList<>();
+
+    private final Candidate tiger = new Candidate("TIGER");
+    private final Candidate lynx = new Candidate("LYNX");
+    private final Candidate leopard = new Candidate("LEOPARD");
+    private final Candidate owl = new Candidate("OWL");
+    private final Candidate buffalo = new Candidate("BUFFALO");
+    private final Candidate jackalope = new Candidate("JACKALOPE");
+
+
+    private final Vote firstVote = new Vote(
+            new Table(1001L),
+            new State("JUNGLE"),
+            Arrays.asList(
+                    new Ticket(jackalope, 5),
+                    new Ticket(leopard, 3),
+                    new Ticket(lynx, 5),
+                    new Ticket(buffalo)
+            )
+    );
+
+    private final Vote secondVote = new Vote(
+            new Table(1002L),
+            new State("JUNGLE"),
+            Arrays.asList(
+                    new Ticket(tiger, 4),
+                    new Ticket(leopard, 3),
+                    new Ticket(lynx, 2),
+                    new Ticket(owl)
+            )
+    );
+
     @Before
-    public void setVotes(){
+    public void setVotes() {
 
-        //STAR
-        Ticket t = new Ticket(new Candidate("JACKALOPE"), 5);
-        Ticket t1 = new Ticket(new Candidate("LEOPARD"), 3);
-        Ticket t2 = new Ticket(new Candidate("LYNX"), 5);
-        Ticket t3 = new Ticket(new Candidate("BUFFALO​"), 4);
+        List<Vote> l = new LinkedList<>();
+        l.add(firstVote);
+        l.add(secondVote);
+        l.add(firstVote);
+        l.add(firstVote);
 
-        Ticket t4 = new Ticket(new Candidate("TIGER"), 4);
-        Ticket t5 = new Ticket(new Candidate("LEOPARD"), 3);
-        Ticket t6 = new Ticket(new Candidate("LYNX"), 2);
-        Ticket t7 = new Ticket(new Candidate("OWL"), 1);
-        List<Ticket> lt = new LinkedList<>();
-        lt.add(t);
-        lt.add(t1);
-        lt.add(t2);
-        lt.add(t3);
-
-        List<Ticket> lt2 = new LinkedList<>();
-        lt2.add(t4);
-        lt2.add(t5);
-        lt2.add(t6);
-        lt2.add(t7);
-
-        //FPTP
-        Vote v = new Vote(lt);
-        Vote v1 = new Vote(lt2);
-        Vote v2 = new Vote(lt);
-        Vote v3 = new Vote(lt);
-        List<Vote> l=new LinkedList<>();
-        l.add(v);
-        l.add(v1);
-        l.add(v2);
-        l.add(v3);
-        FPTP f = new FPTP(l);
-        STAR s = new STAR(l);
-        SPAV sp = new SPAV(l);
-        tableR=new Results(Status.FINISHED, f.calculateScore());
-        state=new Results(Status.FINISHED, sp.calculateScore());
-        national=new Results(Status.FINISHED, s.calculateScore());
+        f = new FPTP(l);
+        s = new STAR(l);
+        sp = new SPAV(l);
+        tableR = new Results(Status.FINISHED, f.calculateScore());
+        state = new Results(Status.FINISHED, sp.calculateScore());
+        national = new Results(Status.FINISHED, s.calculateScore());
 
     }
 
     @Test
     public void CSVTestNational() throws ClientException {
-        ConsultingClient.CSVResults(national,"TestNational", null, null);
+        ConsultingClient.CSVResults(national, "TestNational", null, null);
+        //scoring winner
+        assertEquals(lynx, s.calculateScore().get(0).keySet().toArray()[0]);
+        //runoff winner
+        assertEquals(jackalope, s.calculateScore().get(0).keySet().toArray()[1]);
+
     }
 
     @Test
     public void CSVTestState() throws ClientException {
-        ConsultingClient.CSVResults(state,"TestState", "JUNGLE", null);
+        ConsultingClient.CSVResults(state, "TestState", "JUNGLE", null);
+        assertEquals(leopard, sp.calculateScore().get(0).keySet().toArray()[0]);
+        assertEquals(lynx, sp.calculateScore().get(0).keySet().toArray()[1]);
+        assertEquals(buffalo, sp.calculateScore().get(0).keySet().toArray()[2]);
+        //LEOPARD,LYNX,BUFFALO
     }
 
     @Test
     public void CSVTestTable() throws ClientException {
-        ConsultingClient.CSVResults(tableR,"TestTable", null, "1");
+        ConsultingClient.CSVResults(tableR, "TestTable", null, "1");
+        assertEquals(buffalo, f.calculateScore().get(0).keySet().stream().findFirst().get());
 
     }
 }
+
+
+
+
+
