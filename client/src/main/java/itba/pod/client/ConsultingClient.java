@@ -35,7 +35,7 @@ public class ConsultingClient {
         }
         try {
             Results result;
-            final ConsultingService service = (ConsultingServiceImpl) Naming.lookup("//" + serverAddress + "/consulting-service");
+            final ConsultingService service = (ConsultingService) Naming.lookup("//" + serverAddress + "/consulting-service");
             if (stateName == null && pollingPlaceNumber == null) {
                 result = service.getNationalResults();
             } else if (stateName != null) {

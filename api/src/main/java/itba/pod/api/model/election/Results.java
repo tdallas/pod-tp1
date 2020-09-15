@@ -2,10 +2,11 @@ package itba.pod.api.model.election;
 
 import itba.pod.api.model.vote.Candidate;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Results {
+public class Results implements Serializable {
     private Status status;
     private List<Map<Candidate,Double>> winners;
 

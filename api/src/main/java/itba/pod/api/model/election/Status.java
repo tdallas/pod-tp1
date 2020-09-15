@@ -1,6 +1,8 @@
 package itba.pod.api.model.election;
 
-public enum Status {
+import java.io.Serializable;
+
+public enum Status implements Serializable {
     NOT_INITIALIZED,
     INITIALIZED,
     FINISHED
