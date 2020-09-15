@@ -87,12 +87,15 @@ public class Election {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialize");
         }
+        readLock.lock();
         if (status == Status.INITIALIZED) {
             //parciales
             FPTP f = new FPTP(votes);
+            readLock.unlock();
             return new Results(status, f.calculateScore());
         } else {
             STAR s = new STAR(votes);
+            readLock.unlock();
             return new Results(status, s.calculateScore());
         }
     }
@@ -101,6 +104,7 @@ public class Election {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialize");
         }
+        readLock.lock();
         List<Vote> filterStateVotes = votes
                 .stream()
                 .filter(v->v.getState().equals(state))
@@ -108,24 +112,26 @@ public class Election {
         if (status == Status.INITIALIZED) {
             //parciales
             FPTP f = new FPTP(filterStateVotes);
+            readLock.unlock();
             return new Results(status, f.calculateScore());
         } else {
             SPAV s = new SPAV(filterStateVotes);
+            readLock.unlock();
             return new Results(status, s.calculateScore());
         }
-
     }
 
     public Results getTableResults(Table table) throws RemoteException, ElectionException {
         if (status == Status.NOT_INITIALIZED) {
             throw new ElectionException("Election not initialize");
         }
+        readLock.lock();
         List<Vote> filterStateVotes = votes
                 .stream()
                 .filter(v->v.getTable().equals(table))
                 .collect(Collectors.toList());
         FPTP f = new FPTP(filterStateVotes);
+        readLock.unlock();
         return new Results(status, f.calculateScore());
-
     }
 }
