@@ -21,7 +21,7 @@ public class VotingClient {
         String votesPath = System.getProperty("votesPath");
 
         try {
-            final VotingService service = (VotingServiceImpl) Naming.lookup("//" + serverAddress + "/voting-service");
+            final VotingService service = (VotingService) Naming.lookup("//" + serverAddress + "/voting-service");
             final VotesParser votesParser = new VotesParser();
             List<Vote> votes = votesParser.parse(votesPath);
 

@@ -1,9 +1,13 @@
 package itba.pod.api.model.vote;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Candidate {
-    private final String name;
+public class Candidate implements Serializable {
+    private String name;
+
+    public Candidate() {
+    }
 
     public Candidate(final String name) {
         this.name = name;
@@ -26,7 +30,8 @@ public class Candidate {
         return name;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return Objects.hash(name);
     }
 }
