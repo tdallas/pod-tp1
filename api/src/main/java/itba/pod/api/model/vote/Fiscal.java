@@ -13,16 +13,13 @@ public class Fiscal implements Serializable {
         this.subscription = subscription;
     }
 
-    public Fiscal(final Party party) {
-        this.party = party;
-        this.subscription = null;
-    }
-
     public Party getParty() {
         return this.party;
     }
 
-    public FiscalizationSubscription getSubscription() {
-        return this.subscription;
+    public void notifyVote(final String newVoteNotification) { this.subscription.post(newVoteNotification); }
+
+    public void endSubscription() {
+        this.subscription.end();
     }
 }

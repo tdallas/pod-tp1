@@ -36,6 +36,10 @@ public class Table implements Serializable {
         return this.fiscalSet.stream().filter(fiscal -> fiscal.getParty().equals(party)).findFirst().get();
     }
 
+    public void close() {
+        this.fiscalSet.parallelStream().forEach(Fiscal::endSubscription);
+    }
+
     @Override
     public String toString() {
         return "Table{" +

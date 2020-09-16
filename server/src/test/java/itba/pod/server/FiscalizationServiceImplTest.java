@@ -18,8 +18,22 @@ public class FiscalizationServiceImplTest {
     private final long tableId  = 1234L;
     private final Table table   = new Table(tableId);
     private final Party party   = new Party("Politicians Party");
-    private final FiscalizationSubscriptionImpl subscription = new FiscalizationSubscriptionImpl();
-    private final Fiscal fiscal = new Fiscal(party, subscription);
+    private final Fiscal fiscal = new Fiscal(party, new FiscalizationSubscription() {
+        @Override
+        public void post(String notification) {
+
+        }
+
+        @Override
+        public void consume() {
+
+        }
+
+        @Override
+        public void end() {
+
+        }
+    });
     private final Candidate newMayor = new Candidate(party.getName());
     private final State capitalCity = new State("Capital City");
     private final List<Ticket> ticketList = new LinkedList<>();
@@ -68,13 +82,6 @@ public class FiscalizationServiceImplTest {
         );
 
         System.out.println("Exception thrown: " + exception.getMessage());
-    }
-
-    private static class FiscalizationSubscriptionImpl implements FiscalizationSubscription {
-        @Override
-        public void consume(String notification) {
-            System.out.println(notification);
-        }
     }
 
     @Test

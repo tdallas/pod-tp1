@@ -7,7 +7,6 @@ import itba.pod.api.interfaces.FiscalizationService;
 import itba.pod.api.interfaces.FiscalizationSubscription;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.vote.Fiscal;
-import itba.pod.api.model.vote.FiscalizationSubscriptionImpl;
 import itba.pod.api.model.vote.Party;
 import itba.pod.api.model.vote.Table;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public class FiscalizationClient {
             logger.info("A problem has occurred while registering a new " + parser.partyName + " fiscal: " + e);
         }
 
-        for (;;);
+        this.subscription.consume();
     }
 
     @Parameters(separators = "=")

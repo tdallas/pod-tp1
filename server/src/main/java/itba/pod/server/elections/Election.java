@@ -1,6 +1,5 @@
 package itba.pod.server.elections;
 
-import itba.pod.api.interfaces.FiscalizationSubscription;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Results;
 import itba.pod.api.model.election.Status;
@@ -26,7 +25,7 @@ public class Election {
     private final Lock writeLock = reentrantLock.writeLock();
 
     private Status status;
-    private List<Vote> votes;
+    private final List<Vote> votes;
     private final Map<Long, Table> tables;
 
     public Election() {
@@ -56,6 +55,8 @@ public class Election {
             throw new ElectionException("Invalid status to set");
         } else if (this.status.equals(Status.INITIALIZED) && newStatus.equals(Status.FINISHED)) {
             // TODO calculate results etc etc
+            tables.values().parallelStream().forEach(Table::close);
+
             return changeElectionStatus(newStatus);
         } else if (this.status.equals(Status.NOT_INITIALIZED) && newStatus.equals(Status.INITIALIZED)) {
             // Does this imply something more than only changing status?
@@ -156,12 +157,15 @@ public class Election {
     }
 
     public void notifyVote(final long tableId, final Party party) {
+        if (!this.tables.containsKey(tableId))
+            tables.put(tableId, new Table(tableId));
+
         final Table table = this.tables.get(tableId);
 
         if (table.hasRegisteredFiscalFor(party)) {
-            final String voteNotification = "New vote for " + party + " on polling place " + tableId;
+            final String newVote = "New vote for " + party + " on polling place " + tableId;
 
-            table.getFiscalOfParty(party).getSubscription().consume(voteNotification);
+            table.getFiscalOfParty(party).notifyVote(newVote);
         }
     }
 }
