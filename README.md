@@ -1,6 +1,15 @@
 # pod-tp1
 
-`mvn clean install`
+**Disclaimer: Deploy is done on deploy directory**
+
+1. Deploy:
+`./deploy.sh`
+2. Run registry:
+`./runRegistry.sh`
+3. Run server:
+`./runServer.sh`
+4. Run some votes:
+`./runSomeVotes.sh`
 
 # Dockerfile under /server
 That dockerfile is used for test purpose. We simulate an env where the service runs on another host in the network. It could also be used with port forwarding as a local host.
