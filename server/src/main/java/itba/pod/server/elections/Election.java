@@ -156,7 +156,7 @@ public class Election {
         this.tables.put(tableId, new Table(tableId));
     }
 
-    public void notifyVote(final long tableId, final Party party) {
+    private void notifyVote(final long tableId, final Party party) {
         if (!this.tables.containsKey(tableId))
             tables.put(tableId, new Table(tableId));
 

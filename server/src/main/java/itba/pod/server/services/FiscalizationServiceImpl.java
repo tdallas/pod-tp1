@@ -27,10 +27,9 @@ public class FiscalizationServiceImpl implements FiscalizationService {
             election.getTables().put(tableId, new Table(tableId));
         }
 
-        if (election.getTable(tableId).registerFiscal(fiscal)) {
-            return "Fiscal of " + fiscal.getParty().getName() + " registered on polling place " + tableId;
-        } else {
-            return "There is already a registered fiscal of " + fiscal.getParty().getName() + " on polling place " + tableId;
-        }
+        election.getTable(tableId).registerFiscal(fiscal);
+        String message = "Fiscal of " + fiscal.getParty().getName() + " registered on polling place " + tableId;
+        logger.info(message);
+        return message;
     }
 }

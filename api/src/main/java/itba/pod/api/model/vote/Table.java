@@ -1,18 +1,16 @@
 package itba.pod.api.model.vote;
 
 import java.io.Serializable;
+import java.util.*;
 import java.util.Objects;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 public class Table implements Serializable {
     private final long id;
-    private final Set<Fiscal> fiscalSet;
+    private final List<Fiscal> fiscals;
 
     public Table(long id) {
         this.id = id;
-        this.fiscalSet = new HashSet<>();
+        this.fiscals = new LinkedList<>();
     }
 
     public long getId() {
@@ -20,24 +18,24 @@ public class Table implements Serializable {
     }
 
     public boolean registerFiscal(final Fiscal fiscal) {
-        return this.fiscalSet.add(fiscal);
+        return this.fiscals.add(fiscal);
     }
 
     public boolean hasRegisteredFiscalFor(final Party party) {
-        return this.fiscalSet.stream().anyMatch(fiscal -> fiscal.getParty().equals(party));
+        return this.fiscals.stream().anyMatch(fiscal -> fiscal.getParty().equals(party));
     }
 
-    public Set<Fiscal> getFiscalSet() {
-        return this.fiscalSet;
+    public List<Fiscal> getFiscals() {
+        return this.fiscals;
     }
 
     public Fiscal getFiscalOfParty(final Party party) {
         // TODO: Needs 'isPresent()' check
-        return this.fiscalSet.stream().filter(fiscal -> fiscal.getParty().equals(party)).findFirst().get();
+        return this.fiscals.stream().filter(fiscal -> fiscal.getParty().equals(party)).findFirst().get();
     }
 
     public void close() {
-        this.fiscalSet.parallelStream().forEach(Fiscal::endSubscription);
+        this.fiscals.parallelStream().forEach(Fiscal::endSubscription);
     }
 
     @Override

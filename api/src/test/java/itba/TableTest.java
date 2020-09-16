@@ -30,7 +30,7 @@ public class TableTest {
     @Test
     public void testRegisterFiscal() {
         table.registerFiscal(fiscal);
-        assert(table.getFiscalSet().contains(fiscal));
+        assert(table.getFiscals().contains(fiscal));
     }
 
     @Test
