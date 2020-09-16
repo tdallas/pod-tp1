@@ -1,5 +1,7 @@
 package itba.pod.api.model.vote;
 
+import itba.pod.api.model.election.ElectionException;
+
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -18,8 +20,8 @@ public class Table implements Serializable {
         return this.id;
     }
 
-    public boolean registerFiscal(final Fiscal fiscal) {
-        return this.fiscals.add(fiscal);
+    public void registerFiscal(final Fiscal fiscal) {
+        this.fiscals.add(fiscal);
     }
 
     public boolean hasRegisteredFiscalFor(final Party party) {
@@ -30,9 +32,14 @@ public class Table implements Serializable {
         return this.fiscals;
     }
 
-    public Fiscal getFiscalOfParty(final Party party) {
-        // TODO: Needs 'isPresent()' check
-        return this.fiscals.stream().filter(fiscal -> fiscal.getParty().equals(party)).findFirst().get();
+    public Fiscal getFiscalOfParty(final Party party) throws ElectionException {
+        Optional<Fiscal> optionalFiscal = this.fiscals.stream()
+                                                      .filter(fiscal -> fiscal.getParty().equals(party)).findFirst();
+
+        if (optionalFiscal.isPresent())
+            return optionalFiscal.get();
+        else
+            throw new ElectionException("Could not find a fiscal of party " + party.getName() + " in table " + id);
     }
 
     public void close() {

@@ -21,19 +21,19 @@ public class ConsultingServiceImpl implements ConsultingService {
 
 
     @Override
-    public Results getNationalResults() throws RemoteException, ElectionException {
+    public Results getNationalResults() throws ElectionException {
         logger.debug("Get National Results");
         return election.getNationalResults();
     }
 
     @Override
-    public Results getStateResults(State state) throws RemoteException, ElectionException {
+    public Results getStateResults(State state) throws ElectionException {
         logger.debug("Get State Results {}",state);
         return election.getStateResults(state);
     }
 
     @Override
-    public Results getTableResults(Table table) throws RemoteException, ElectionException {
+    public Results getTableResults(Table table) throws ElectionException {
         logger.debug("Get table results {}",table);
         return election.getTableResults(table);
     }

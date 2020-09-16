@@ -35,7 +35,7 @@ public class Election {
         this.tables = new HashMap<>();
     }
 
-    // TODO: Check if it makes sense to keep this constructor just for stubs while testing
+    // Only for testing purposes
     public Election(final Status newStatus) {
         this.status = newStatus;
         this.votes = new LinkedList<>();
@@ -78,14 +78,14 @@ public class Election {
         return getStatus();
     }
 
-    public void emitVote(final Vote vote) throws ElectionException, RemoteException {
-        if (status.equals(Status.NOT_INITIALIZED) || status.equals(Status.FINISHED)) {
+    public void emitVote(final Vote vote) throws ElectionException {
+        if (status.equals(Status.NOT_INITIALIZED) || status.equals(Status.FINISHED))
             throw new ElectionException("Election does not admit votes. Status is currently: " + status.toString());
-        }
+
         addVote(vote);
     }
 
-    private void addVote(final Vote vote) throws RemoteException {
+    private void addVote(final Vote vote) {
         writeLock.lock();
         this.votes.add(vote);
         this.notifyVote(vote.getTable().getId(), vote.getFPTPCandidate().getParty());
@@ -157,7 +157,7 @@ public class Election {
         this.tables.put(tableId, new Table(tableId));
     }
 
-    private void notifyVote(final long tableId, final Party party) throws RemoteException {
+    private void notifyVote(final long tableId, final Party party) {
         if (!this.tables.containsKey(tableId))
             tables.put(tableId, new Table(tableId));
 
@@ -166,7 +166,20 @@ public class Election {
         if (table.hasRegisteredFiscalFor(party)) {
             final String newVote = "New vote for " + party + " on polling place " + tableId;
 
-            table.getFiscalOfParty(party).notifyVote(newVote);
+            try {
+                table.getFiscalOfParty(party).notifyVote(newVote);
+            } catch (ElectionException e) {
+                logger.info(e.toString());
+            } catch (RemoteException e) {
+                logger.info("RMI failure while requesting the fiscalization subscription for fiscal of party " +
+                        party + " in table " + tableId);
+            }
         }
+    }
+
+    public boolean hasStarted() {
+        Status currentStatus = this.getStatus();
+
+        return currentStatus == Status.INITIALIZED || currentStatus == Status.FINISHED;
     }
 }

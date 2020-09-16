@@ -18,18 +18,18 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
-    public Status openElections() throws RemoteException, ElectionException {
+    public Status openElections() throws ElectionException {
         logger.info("Elections opened");
         return election.setStatus(Status.INITIALIZED);
     }
 
     @Override
-    public Status consultElectionStatus() throws RemoteException {
+    public Status consultElectionStatus() {
         return election.getStatus();
     }
 
     @Override
-    public Status finishElections() throws RemoteException, ElectionException {
+    public Status finishElections() throws ElectionException {
         logger.info("Elections closed");
         return election.setStatus(Status.FINISHED);
     }

@@ -6,6 +6,5 @@ import java.rmi.RemoteException;
 
 public interface FiscalizationSubscription extends Remote, Serializable {
     void post(final String notification) throws RemoteException;
-    void consume() throws RemoteException;
     void end() throws RemoteException;
 }

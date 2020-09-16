@@ -12,19 +12,10 @@ public class TableTest {
     private final Party party = new Party("Politics Party");
     private final Fiscal fiscal = new Fiscal(party, new FiscalizationSubscription() {
         @Override
-        public void post(String notification) {
-
-        }
+        public void post(String notification) {}
 
         @Override
-        public void consume() {
-
-        }
-
-        @Override
-        public void end() {
-
-        }
+        public void end() {}
     });
 
     @Test

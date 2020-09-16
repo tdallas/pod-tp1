@@ -1,7 +1,6 @@
 package itba.pod.api.model.vote;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 public class State implements Serializable {
     private String state;

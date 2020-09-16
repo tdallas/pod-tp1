@@ -18,7 +18,7 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public void emitVote(Vote vote) throws RemoteException, ElectionException {
+    public void emitVote(Vote vote) throws ElectionException {
         logger.debug("Emitting " + vote.toString());
         election.emitVote(vote);
     }

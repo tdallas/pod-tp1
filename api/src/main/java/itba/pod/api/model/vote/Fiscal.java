@@ -18,9 +18,16 @@ public class Fiscal implements Serializable {
         return this.party;
     }
 
-    public void notifyVote(final String newVoteNotification) throws RemoteException { this.subscription.post(newVoteNotification); }
+    public void notifyVote(final String newVoteNotification) throws RemoteException {
+        this.subscription.post(newVoteNotification);
+    }
 
     public void endSubscription() throws RemoteException {
         this.subscription.end();
+    }
+
+    @Override
+    public String toString() {
+        return this.party.toString();
     }
 }

@@ -8,7 +8,6 @@ import itba.pod.server.elections.Election;
 import itba.pod.server.services.FiscalizationServiceImpl;
 import org.junit.jupiter.api.Test;
 
-import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,19 +20,10 @@ public class FiscalizationServiceImplTest {
     private final Party party   = new Party("Politicians Party");
     private final Fiscal fiscal = new Fiscal(party, new FiscalizationSubscription() {
         @Override
-        public void post(String notification) {
-
-        }
+        public void post(String notification) {}
 
         @Override
-        public void consume() {
-
-        }
-
-        @Override
-        public void end() {
-
-        }
+        public void end() {}
     });
     private final Candidate newMayor = new Candidate(party.getName());
     private final State capitalCity = new State("Capital City");
@@ -59,7 +49,7 @@ public class FiscalizationServiceImplTest {
 
     @Test
     public void testRegisterExceptionWhenElectionInitialized() {
-        election = new Election(Status.FINISHED);
+        election = new Election(Status.INITIALIZED);
 
         election.addTable(tableId);
 
@@ -100,8 +90,8 @@ public class FiscalizationServiceImplTest {
         try {
             election.setStatus(Status.INITIALIZED);
             election.emitVote(new Vote(table, capitalCity, ticketList));
-        } catch (ElectionException | RemoteException ignored) {}
+        } catch (ElectionException ignored) {}
 
-        // TODO: Check how to test this
+        // Fixme: Check how to test this
     }
 }
