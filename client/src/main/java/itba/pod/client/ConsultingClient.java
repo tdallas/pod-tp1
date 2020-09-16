@@ -66,7 +66,7 @@ public class ConsultingClient {
             } else {
                 if (state == null && table == null) { //nacional
                     sb.append("Score;Party\n");
-                    results.getWinners().get(0).forEach((k, v) -> sb.append(v.intValue()).append(";").append(k.getName()).append("\n"));
+                    results.getWinners().get(0).entrySet().stream().filter(e->e.getValue()>0).forEach((e) ->  sb.append(e.getValue().intValue()).append(";").append(e.getKey().getName()).append("\n"));
                     sb.append("Percentage;Party\n");
                     results.getWinners().get(1).forEach((k, v) -> sb.append(String.format("%.2f", v * 100)).append("%;").append(k.getName()).append("\n"));
                     sb.append("Winner\n");
