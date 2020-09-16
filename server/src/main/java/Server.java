@@ -23,7 +23,7 @@ public class Server {
     private static final int ADMIN_SERVICE_PORT = 10001;
     private static final int VOTING_SERVICE_PORT = 10002;
     private static final int CONSULTING_SERVICE_PORT = 10003;
-    private static final int FISCALIZATION_SERVICE_PORT = 1004;
+    private static final int FISCALIZATION_SERVICE_PORT = 10004;
 
     private static final int DEFAULT_REGISTRY_PORT = 1099;
 
