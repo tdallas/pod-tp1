@@ -1,6 +1,7 @@
 package itba.pod.api.model.vote;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.Objects;
 
@@ -35,7 +36,13 @@ public class Table implements Serializable {
     }
 
     public void close() {
-        this.fiscals.parallelStream().forEach(Fiscal::endSubscription);
+
+        this.fiscals.parallelStream().forEach(f -> { try {
+            f.endSubscription();
+        } catch (RemoteException e) {
+            System.out.println(e.toString());
+            System.out.println("Remote exception");
+        }});
     }
 
     @Override

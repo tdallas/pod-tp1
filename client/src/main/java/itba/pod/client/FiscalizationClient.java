@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 public class FiscalizationClient {
 
@@ -38,6 +39,7 @@ public class FiscalizationClient {
         parser.parse(args);
 
         try {
+            UnicastRemoteObject.exportObject(subscription, 0);
             final FiscalizationService fiscalizationService = (FiscalizationService) Naming
                     .lookup("//" + parser.address + "/fiscalization-service");
             final Table table = new Table(parser.tableId);
@@ -45,13 +47,12 @@ public class FiscalizationClient {
             final String newFiscalRegisteredMsg = fiscalizationService.register(table.getId(), fiscal);
 
             System.out.println(newFiscalRegisteredMsg);
+            this.subscription.consume();
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
             logger.info("RMI failure while requesting the fiscalization service: " + e);
         } catch (ElectionException e) {
             logger.info("A problem has occurred while registering a new " + parser.partyName + " fiscal: " + e);
         }
-
-        this.subscription.consume();
     }
 
     @Parameters(separators = "=")

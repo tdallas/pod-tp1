@@ -10,6 +10,7 @@ import itba.pod.server.votingSystems.STAR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -77,14 +78,14 @@ public class Election {
         return getStatus();
     }
 
-    public void emitVote(final Vote vote) throws ElectionException {
+    public void emitVote(final Vote vote) throws ElectionException, RemoteException {
         if (status.equals(Status.NOT_INITIALIZED) || status.equals(Status.FINISHED)) {
             throw new ElectionException("Election does not admit votes. Status is currently: " + status.toString());
         }
         addVote(vote);
     }
 
-    private void addVote(final Vote vote) {
+    private void addVote(final Vote vote) throws RemoteException {
         writeLock.lock();
         this.votes.add(vote);
         this.notifyVote(vote.getTable().getId(), vote.getFPTPCandidate().getParty());
@@ -156,7 +157,7 @@ public class Election {
         this.tables.put(tableId, new Table(tableId));
     }
 
-    private void notifyVote(final long tableId, final Party party) {
+    private void notifyVote(final long tableId, final Party party) throws RemoteException {
         if (!this.tables.containsKey(tableId))
             tables.put(tableId, new Table(tableId));
 

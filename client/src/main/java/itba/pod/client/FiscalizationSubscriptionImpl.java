@@ -2,6 +2,7 @@ package itba.pod.client;
 
 import itba.pod.api.interfaces.FiscalizationSubscription;
 
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -10,7 +11,7 @@ public class FiscalizationSubscriptionImpl implements FiscalizationSubscription 
     private boolean subscriptionIsActive = true;
 
     @Override
-    public void consume() {
+    public void consume() throws RemoteException {
         while (subscriptionIsActive)
             if (!this.notifications.isEmpty())
                 System.out.println(this.notifications.poll());
@@ -19,13 +20,13 @@ public class FiscalizationSubscriptionImpl implements FiscalizationSubscription 
     }
 
     @Override
-    public void post(final String notification) {
+    public void post(final String notification) throws RemoteException {
         this.notifications.offer(notification);
-        System.out.println("Agregue una notificacion " + notifications.peek());
+        System.out.println(notifications.peek());
     }
 
     @Override
-    public void end() {
+    public void end() throws RemoteException  {
         this.subscriptionIsActive = false;
     }
 }

@@ -8,6 +8,7 @@ import itba.pod.server.elections.Election;
 import itba.pod.server.services.FiscalizationServiceImpl;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class FiscalizationServiceImplTest {
         try {
             election.setStatus(Status.INITIALIZED);
             election.emitVote(new Vote(table, capitalCity, ticketList));
-        } catch (ElectionException ignored) {}
+        } catch (ElectionException | RemoteException ignored) {}
 
         // TODO: Check how to test this
     }
