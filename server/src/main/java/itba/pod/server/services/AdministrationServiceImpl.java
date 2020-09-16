@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 
 public class AdministrationServiceImpl implements AdministrationService {
     private static final Logger logger = LoggerFactory.getLogger(AdministrationServiceImpl.class);
-    private Election election;
+    private final Election election;
 
     public AdministrationServiceImpl(Election election) {
         this.election = election;

@@ -1,26 +1,22 @@
 package itba.pod.server;
 
-import itba.pod.api.model.election.Results;
-import itba.pod.api.model.election.Status;
 import itba.pod.api.model.vote.*;
 
 import itba.pod.server.votingSystems.FPTP;
 import itba.pod.server.votingSystems.SPAV;
 import itba.pod.server.votingSystems.STAR;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class VotingSystemTest {
     private FPTP f; //mesas
     private STAR s; //nacionales
     private SPAV sp; //provincial
-    List<Vote> l = new LinkedList<>();
 
     private final Candidate tiger = new Candidate("TIGER");
     private final Candidate lynx = new Candidate("LYNX");
@@ -71,9 +67,10 @@ public class VotingSystemTest {
     @Test
     public void STARTest() {
         List<Map<Candidate, Double>> m = s.calculateScore();
-        List<Map<Candidate,Double>> expected=new LinkedList<>();
-        Map<Candidate,Double> scoringExpected=new LinkedHashMap<>();
-        Map<Candidate,Double> runoffExpected=new LinkedHashMap<>();
+        // TODO: Check if 'expected' is needed
+        List<Map<Candidate,Double>> expected = new LinkedList<>();
+        Map<Candidate,Double> scoringExpected = new LinkedHashMap<>();
+        Map<Candidate,Double> runoffExpected = new LinkedHashMap<>();
         scoringExpected.put(lynx,17.0);
         scoringExpected.put(jackalope,15.0);
         scoringExpected.put(leopard,12.0);
@@ -88,8 +85,6 @@ public class VotingSystemTest {
         assertEquals(scoringExpected, m.get(0));
         assertEquals(runoffExpected, m.get(1));
         System.out.println("START\n"+m);
-
-
     }
 
     @Test
@@ -99,16 +94,14 @@ public class VotingSystemTest {
         fptpExpected.put(owl,0.25);
         assertEquals(fptpExpected,f.calculateScore().get(0));
         System.out.println("FPTP\n"+f.calculateScore());
-
-
     }
 
     @Test
     public void SPAVTest() {
         List<Map<Candidate,Double>> expectd;
-        Map<Candidate,Double> firstRunExpected=new LinkedHashMap<>();
-        Map<Candidate,Double> secondRunExpected=new LinkedHashMap<>();
-        Map<Candidate,Double> thirdRunExpected=new LinkedHashMap<>();
+        Map<Candidate,Double> firstRunExpected = new LinkedHashMap<>();
+        Map<Candidate,Double> secondRunExpected = new LinkedHashMap<>();
+        Map<Candidate,Double> thirdRunExpected = new LinkedHashMap<>();
         firstRunExpected.put(leopard,4.0);
         firstRunExpected.put(lynx,4.0);
         firstRunExpected.put(buffalo,3.0);
@@ -130,7 +123,6 @@ public class VotingSystemTest {
         assertEquals(secondRunExpected,expectd.get(1));
         assertEquals(thirdRunExpected,expectd.get(2));
         System.out.println("SPAV\n"+expectd);
-
     }
 
 }

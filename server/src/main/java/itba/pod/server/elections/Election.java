@@ -1,23 +1,19 @@
 package itba.pod.server.elections;
 
+import itba.pod.api.interfaces.FiscalizationSubscription;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Results;
 import itba.pod.api.model.election.Status;
-import itba.pod.api.model.vote.State;
-import itba.pod.api.model.vote.Table;
-import itba.pod.api.model.vote.Vote;
+import itba.pod.api.model.vote.*;
 import itba.pod.server.votingSystems.FPTP;
 import itba.pod.server.votingSystems.SPAV;
 import itba.pod.server.votingSystems.STAR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 import java.util.*;
@@ -90,6 +86,7 @@ public class Election {
     private void addVote(final Vote vote) {
         writeLock.lock();
         this.votes.add(vote);
+        this.notifyVote(vote.getTable().getId(), vote.getFPTPCandidate().getParty());
         writeLock.unlock();
         logger.info("Now there are {} votes", votes.size());
     }
@@ -156,5 +153,15 @@ public class Election {
 
     public void addTable(final long tableId) {
         this.tables.put(tableId, new Table(tableId));
+    }
+
+    public void notifyVote(final long tableId, final Party party) {
+        final Table table = this.tables.get(tableId);
+
+        if (table.hasRegisteredFiscalFor(party)) {
+            final String voteNotification = "New vote for " + party + " on polling place " + tableId;
+
+            table.getFiscalOfParty(party).getSubscription().consume(voteNotification);
+        }
     }
 }

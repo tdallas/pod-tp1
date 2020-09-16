@@ -1,22 +1,29 @@
 package itba.pod.server;
 
+import itba.pod.api.interfaces.FiscalizationSubscription;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Status;
-import itba.pod.api.model.vote.Candidate;
-import itba.pod.api.model.vote.Table;
+import itba.pod.api.model.vote.*;
 import itba.pod.server.elections.Election;
 import itba.pod.server.services.FiscalizationServiceImpl;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.beans.PropertyChangeListener;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FiscalizationServiceImplTest {
     private FiscalizationServiceImpl fiscalService;
-    private final long tableId      = 1234L;
-    private final Table table       = new Table(tableId);
-    private final Candidate fiscal  = new Candidate("Pepe");
-    private Election election       = new Election();
+    private final long tableId  = 1234L;
+    private final Table table   = new Table(tableId);
+    private final Party party   = new Party("Politicians Party");
+    private final FiscalizationSubscriptionImpl subscription = new FiscalizationSubscriptionImpl();
+    private final Fiscal fiscal = new Fiscal(party, subscription);
+    private final Candidate newMayor = new Candidate(party.getName());
+    private final State capitalCity = new State("Capital City");
+    private final List<Ticket> ticketList = new LinkedList<>();
+    private Election election   = new Election();
 
     @Test
     public void testRegister() {
@@ -24,14 +31,14 @@ public class FiscalizationServiceImplTest {
 
         this.fiscalService = new FiscalizationServiceImpl(election);
 
-        final String expectedMsg = "Fiscal of " + fiscal.getName() + " registered on polling place " + tableId;
+        final String expectedMsg = "Fiscal of " + party.getName() + " registered on polling place " + tableId;
         String actualMsg = "";
 
         try {
             actualMsg = this.fiscalService.register(table.getId(), fiscal);
         } catch (ElectionException ignored) {}
 
-        assert(this.election.getTable(table.getId()).hasRegisteredFiscal(fiscal));
+        assert(this.election.getTable(table.getId()).hasRegisteredFiscalFor(party));
         assertEquals(actualMsg, expectedMsg);
     }
 
@@ -63,8 +70,14 @@ public class FiscalizationServiceImplTest {
         System.out.println("Exception thrown: " + exception.getMessage());
     }
 
+    private static class FiscalizationSubscriptionImpl implements FiscalizationSubscription {
+        @Override
+        public void consume(String notification) {
+            System.out.println(notification);
+        }
+    }
+
     @Test
-    // TODO: Refactor this, this isn't an actual test, the event message needs to be obtained and compared
     public void testNotifyVote() {
         election.addTable(tableId);
 
@@ -74,13 +87,13 @@ public class FiscalizationServiceImplTest {
             this.fiscalService.register(table.getId(), fiscal);
         } catch (ElectionException ignored) {}
 
-        PropertyChangeListener observer = evt ->  {
-            final String voteNotification = (String) evt.getNewValue();
+        ticketList.add(new Ticket(newMayor));
 
-            System.out.println(voteNotification);
-        };
+        try {
+            election.setStatus(Status.INITIALIZED);
+            election.emitVote(new Vote(table, capitalCity, ticketList));
+        } catch (ElectionException ignored) {}
 
-        this.fiscalService.addPropertyChangeListener(observer);
-        this.fiscalService.notifyVote(table.getId(), fiscal);
+        // TODO: Check how to test this
     }
 }

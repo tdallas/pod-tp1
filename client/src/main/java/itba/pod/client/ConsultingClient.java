@@ -8,7 +8,6 @@ import itba.pod.api.model.election.Status;
 import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.State;
 import itba.pod.api.model.vote.Table;
-import itba.pod.server.services.ConsultingServiceImpl;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -62,13 +61,14 @@ public class ConsultingClient {
             StringBuilder sb = new StringBuilder();
             if (results.getStatus() == Status.INITIALIZED) {
                 sb.append("Percentage;Party\n");
-                results.getWinners().get(0).forEach((k, v) -> sb.append(String.format("%.2f", v)).append("%;").append(k.getName()).append("\n"));
+                results.getWinners().get(0).forEach((k, v) -> sb.append(String.format("%.2f", v)).append("%;").append(k.getParty().getName()).append("\n"));
             } else {
                 if (state == null && table == null) { //nacional
                     sb.append("Score;Party\n");
                     results.getWinners().get(0).entrySet().stream().filter(e->e.getValue()>0).forEach((e) ->  sb.append(e.getValue().intValue()).append(";").append(e.getKey().getName()).append("\n"));
+                    results.getWinners().get(0).forEach((k, v) -> sb.append(v.intValue()).append(";").append(k.getParty().getName()).append("\n"));
                     sb.append("Percentage;Party\n");
-                    results.getWinners().get(1).forEach((k, v) -> sb.append(String.format("%.2f", v * 100)).append("%;").append(k.getName()).append("\n"));
+                    results.getWinners().get(1).forEach((k, v) -> sb.append(String.format("%.2f", v * 100)).append("%;").append(k.getParty().getName()).append("\n"));
                     sb.append("Winner\n");
                     sb.append(results.getWinners().get(1).entrySet().iterator().next().getKey()).append("\n");
                 } else if (table == null) {//provincial
@@ -76,7 +76,7 @@ public class ConsultingClient {
                     for (int i = 0; i < provinceRounds; i++) {
                         sb.append("Round ").append(i + 1).append("\n");
                         sb.append("Approval;Party\n");
-                        results.getWinners().get(i).forEach((k, v) -> sb.append(String.format("%.2f", v)).append(";").append(k.getName()).append("\n"));
+                        results.getWinners().get(i).forEach((k, v) -> sb.append(String.format("%.2f", v)).append(";").append(k.getParty().getName()).append("\n"));
                         sb.append("Winners\n");
                         aux.add(results.getWinners().get(i).entrySet().iterator().next().getKey());
                         for (Candidate c : aux) {
@@ -88,7 +88,7 @@ public class ConsultingClient {
                     }
                 } else {
                     sb.append("Percentage;Party\n");
-                    results.getWinners().get(0).forEach((k, v) -> sb.append(String.format("%.2f", v * 100)).append("%;").append(k.getName()).append("\n"));
+                    results.getWinners().get(0).forEach((k, v) -> sb.append(String.format("%.2f", v * 100)).append("%;").append(k.getParty().getName()).append("\n"));
                     sb.append("Winner\n");
                     sb.append(results.getWinners().get(0).entrySet().iterator().next().getKey()).append("\n");
 

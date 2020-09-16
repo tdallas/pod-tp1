@@ -4,11 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Ticket implements Serializable {
-    private Candidate candidate;
+    private final Candidate candidate;
     private int points;
-
-    public Ticket() {
-    }
 
     public Ticket(final Candidate candidate) {
         this.candidate = candidate;

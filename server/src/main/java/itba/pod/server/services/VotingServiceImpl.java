@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.rmi.RemoteException;
 
 public class VotingServiceImpl implements VotingService {
-    private static Logger logger = LoggerFactory.getLogger(VotingServiceImpl.class);
-    private Election election;
+    private static final Logger logger = LoggerFactory.getLogger(VotingServiceImpl.class);
+    private final Election election;
 
     public VotingServiceImpl(Election election) {
         this.election = election;

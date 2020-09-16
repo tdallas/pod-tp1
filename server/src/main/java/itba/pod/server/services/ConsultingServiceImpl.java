@@ -13,8 +13,7 @@ import java.rmi.RemoteException;
 
 public class ConsultingServiceImpl implements ConsultingService {
     private static final Logger logger = LoggerFactory.getLogger(ConsultingServiceImpl.class);
-
-    private Election election;
+    private final Election election;
 
     public ConsultingServiceImpl(Election election) {
         this.election = election;

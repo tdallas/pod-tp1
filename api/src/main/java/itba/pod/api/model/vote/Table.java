@@ -7,8 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Table implements Serializable {
-    private long id;
-    private final Set<Candidate> fiscalSet;
+    private final long id;
+    private final Set<Fiscal> fiscalSet;
 
     public Table(long id) {
         this.id = id;
@@ -19,16 +19,21 @@ public class Table implements Serializable {
         return this.id;
     }
 
-    public boolean registerFiscal(final Candidate fiscal) {
+    public boolean registerFiscal(final Fiscal fiscal) {
         return this.fiscalSet.add(fiscal);
     }
 
-    public boolean hasRegisteredFiscal(final Candidate fiscal) {
-        return this.fiscalSet.contains(fiscal);
+    public boolean hasRegisteredFiscalFor(final Party party) {
+        return this.fiscalSet.stream().anyMatch(fiscal -> fiscal.getParty().equals(party));
     }
 
-    public Set<Candidate> getFiscalSet() {
+    public Set<Fiscal> getFiscalSet() {
         return this.fiscalSet;
+    }
+
+    public Fiscal getFiscalOfParty(final Party party) {
+        // TODO: Needs 'isPresent()' check
+        return this.fiscalSet.stream().filter(fiscal -> fiscal.getParty().equals(party)).findFirst().get();
     }
 
     @Override

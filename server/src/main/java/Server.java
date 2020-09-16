@@ -20,14 +20,14 @@ public class Server {
 
     private final static Logger logger = LoggerFactory.getLogger(Server.class);
 
-    private static final int ADMIN_SERVICE_PORT         = 10001;
-    private static final int VOTING_SERVICE_PORT        = 10002;
-    private static final int CONSULTING_SERVICE_PORT    = 10003;
+    private static final int ADMIN_SERVICE_PORT = 10001;
+    private static final int VOTING_SERVICE_PORT = 10002;
+    private static final int CONSULTING_SERVICE_PORT = 10003;
     private static final int FISCALIZATION_SERVICE_PORT = 1004;
 
-    private static final int DEFAULT_REGISTRY_PORT      = 1099;
+    private static final int DEFAULT_REGISTRY_PORT = 1099;
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args) {
         logger.info("Server Starting ...");
         registerServices(System.getProperty("dockerized") != null);
     }
@@ -45,19 +45,19 @@ public class Server {
                 Integer.parseInt(System.getProperty("registryPort")) : DEFAULT_REGISTRY_PORT;
 
         final AdministrationService administrationService = new AdministrationServiceImpl(election);
-        final VotingService votingService                 = new VotingServiceImpl(election);
-        final ConsultingService consultingService         = new ConsultingServiceImpl(election);
-        final FiscalizationService fiscalizationService   = new FiscalizationServiceImpl(election);
+        final VotingService votingService = new VotingServiceImpl(election);
+        final ConsultingService consultingService = new ConsultingServiceImpl(election);
+        final FiscalizationService fiscalizationService = new FiscalizationServiceImpl(election);
 
         try {
-            final Registry registry           = LocateRegistry.createRegistry(registryPort);
+            final Registry registry = LocateRegistry.createRegistry(registryPort);
             final Remote remoteAdministration = UnicastRemoteObject.exportObject(administrationService,
                     isDockerized ? ADMIN_SERVICE_PORT : 0);
-            final Remote remoteVoting          = UnicastRemoteObject.exportObject(votingService,
+            final Remote remoteVoting = UnicastRemoteObject.exportObject(votingService,
                     isDockerized ? VOTING_SERVICE_PORT : 0);
-            final Remote remoteConsulting      = UnicastRemoteObject.exportObject(consultingService,
+            final Remote remoteConsulting = UnicastRemoteObject.exportObject(consultingService,
                     isDockerized ? CONSULTING_SERVICE_PORT : 0);
-            final Remote remoteFiscalization   = UnicastRemoteObject.exportObject(fiscalizationService,
+            final Remote remoteFiscalization = UnicastRemoteObject.exportObject(fiscalizationService,
                     isDockerized ? FISCALIZATION_SERVICE_PORT : 0);
 
 
