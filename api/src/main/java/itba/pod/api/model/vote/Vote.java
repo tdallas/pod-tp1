@@ -4,14 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Vote implements Serializable {
-    private Table table;
-    private State state;
+    private final Table table;
+    private final State state;
     // first 3(i = [0,1,2]) are for STAR and SPAV, the last one is for FPTP
-    private List<Ticket> tickets;
-
-    public Vote() {
-
-    }
+    private final List<Ticket> tickets;
 
     public Vote(final Table table, final State state, final List<Ticket> tickets) {
         this.table = table;
@@ -43,7 +39,7 @@ public class Vote implements Serializable {
 
     @Override
     public String toString() {
-        return "Vote for " + getFPTPCandidate() + " in table " + table.toString() + " in " + state.toString();
+        return "Vote for " + getFPTPCandidate() + " in table " + table + " in " + state;
     }
 
     @Override

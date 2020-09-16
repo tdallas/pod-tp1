@@ -6,15 +6,15 @@ import itba.pod.api.model.vote.*;
 import itba.pod.server.votingSystems.FPTP;
 import itba.pod.server.votingSystems.SPAV;
 import itba.pod.server.votingSystems.STAR;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConsultingClientTest {
     private Results tableR;
@@ -56,7 +56,7 @@ public class ConsultingClientTest {
             )
     );
 
-    @Before
+    @BeforeEach
     public void setVotes() {
 
         List<Vote> l = new LinkedList<>();

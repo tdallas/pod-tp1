@@ -4,7 +4,6 @@ import itba.pod.api.interfaces.VotingService;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.vote.Vote;
 import itba.pod.parser.VotesParser;
-import itba.pod.server.services.VotingServiceImpl;
 
 import java.io.IOException;
 import java.rmi.Naming;

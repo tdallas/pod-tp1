@@ -3,9 +3,7 @@ package itba.pod.server.elections;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Results;
 import itba.pod.api.model.election.Status;
-import itba.pod.api.model.vote.State;
-import itba.pod.api.model.vote.Table;
-import itba.pod.api.model.vote.Vote;
+import itba.pod.api.model.vote.*;
 import itba.pod.server.votingSystems.FPTP;
 import itba.pod.server.votingSystems.SPAV;
 import itba.pod.server.votingSystems.STAR;
@@ -13,27 +11,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
+import java.util.*;
 
 public class Election {
-    private static Logger logger = LoggerFactory.getLogger(Election.class);
+    private static final Logger logger = LoggerFactory.getLogger(Election.class);
 
     private final ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock(true);
     private final Lock readLock = reentrantLock.readLock();
     private final Lock writeLock = reentrantLock.writeLock();
 
     private Status status;
-    private List<Vote> votes;
+    private final List<Vote> votes;
+    private final Map<Long, Table> tables;
 
     public Election() {
-        status = Status.NOT_INITIALIZED;
-        votes = new LinkedList<>();
+        this.status = Status.NOT_INITIALIZED;
+        this.votes = new LinkedList<>();
+        this.tables = new HashMap<>();
+    }
+
+    // Only for testing purposes
+    public Election(final Status newStatus) {
+        this.status = newStatus;
+        this.votes = new LinkedList<>();
+        this.tables = new HashMap<>();
     }
 
     public Status getStatus() {
@@ -44,19 +50,22 @@ public class Election {
     }
 
     // setStatus(NOT_INITIALIZED) is not a valid flow so there is no need to compute that logic
-    public Status setStatus(final Status status) throws ElectionException {
-        if (getStatus().equals(status)) {
+    public Status setStatus(final Status newStatus) throws ElectionException {
+        if (this.status.equals(newStatus)) {
             // FIXME use custom exception pls
             throw new ElectionException("Invalid status to set");
-        } else if (getStatus().equals(Status.INITIALIZED) && status.equals(Status.FINISHED)) {
-            return changeElectionStatus(status);
+        } else if (this.status.equals(Status.INITIALIZED) && newStatus.equals(Status.FINISHED)) {
             // TODO calculate results etc etc
-        } else if (getStatus().equals(Status.NOT_INITIALIZED) && status.equals(Status.INITIALIZED)) {
-            // Does this implies something more than only changing status?
-            return changeElectionStatus(status);
+            tables.values().parallelStream().forEach(Table::close);
+
+            return changeElectionStatus(newStatus);
+        } else if (this.status.equals(Status.NOT_INITIALIZED) && newStatus.equals(Status.INITIALIZED)) {
+            // Does this imply something more than only changing status?
+            return changeElectionStatus(newStatus);
         } else {
             // FIXME use custom exception pls
-            throw new ElectionException("Invalid status to set");
+            throw new ElectionException("The election status cannot be forcefully changed from " + this.status +
+                    " to " + newStatus);
         }
         // si el status a setear es finalizada --> calculo resultados?
         // si el status a setear es abiertas (?) --> las abro
@@ -70,22 +79,23 @@ public class Election {
     }
 
     public void emitVote(final Vote vote) throws ElectionException {
-        if (status.equals(Status.NOT_INITIALIZED) || status.equals(Status.FINISHED)) {
+        if (status.equals(Status.NOT_INITIALIZED) || status.equals(Status.FINISHED))
             throw new ElectionException("Election does not admit votes. Status is currently: " + status.toString());
-        }
+
         addVote(vote);
     }
 
     private void addVote(final Vote vote) {
         writeLock.lock();
         this.votes.add(vote);
+        this.notifyVote(vote.getTable().getId(), vote.getFPTPCandidate().getParty());
         writeLock.unlock();
         logger.info("Now there are {} votes", votes.size());
     }
 
-    public Results getNationalResults() throws RemoteException, ElectionException {
+    public Results getNationalResults() throws ElectionException {
         if (status == Status.NOT_INITIALIZED) {
-            throw new ElectionException("Election not initialize");
+            throw new ElectionException("Election not initialized");
         }
         readLock.lock();
         if (status == Status.INITIALIZED) {
@@ -100,9 +110,9 @@ public class Election {
         }
     }
 
-    public Results getStateResults(State state) throws RemoteException, ElectionException {
+    public Results getStateResults(State state) throws ElectionException {
         if (status == Status.NOT_INITIALIZED) {
-            throw new ElectionException("Election not initialize");
+            throw new ElectionException("Election not initialized");
         }
         readLock.lock();
         List<Vote> filterStateVotes = votes
@@ -121,9 +131,9 @@ public class Election {
         }
     }
 
-    public Results getTableResults(Table table) throws RemoteException, ElectionException {
+    public Results getTableResults(Table table) throws ElectionException {
         if (status == Status.NOT_INITIALIZED) {
-            throw new ElectionException("Election not initialize");
+            throw new ElectionException("Election not initialized");
         }
         readLock.lock();
         List<Vote> filterStateVotes = votes
@@ -133,5 +143,43 @@ public class Election {
         FPTP f = new FPTP(filterStateVotes);
         readLock.unlock();
         return new Results(status, f.calculateScore());
+    }
+
+    public Map<Long, Table> getTables() {
+        return tables;
+    }
+
+    public Table getTable(final long tableId) {
+        return tables.get(tableId);
+    }
+
+    public void addTable(final long tableId) {
+        this.tables.put(tableId, new Table(tableId));
+    }
+
+    private void notifyVote(final long tableId, final Party party) {
+        if (!this.tables.containsKey(tableId))
+            tables.put(tableId, new Table(tableId));
+
+        final Table table = this.tables.get(tableId);
+
+        if (table.hasRegisteredFiscalFor(party)) {
+            final String newVote = "New vote for " + party + " on polling place " + tableId;
+
+            try {
+                table.getFiscalOfParty(party).notifyVote(newVote);
+            } catch (ElectionException e) {
+                logger.info(e.toString());
+            } catch (RemoteException e) {
+                logger.info("RMI failure while requesting the fiscalization subscription for fiscal of party " +
+                        party + " in table " + tableId);
+            }
+        }
+    }
+
+    public boolean hasStarted() {
+        Status currentStatus = this.getStatus();
+
+        return currentStatus == Status.INITIALIZED || currentStatus == Status.FINISHED;
     }
 }

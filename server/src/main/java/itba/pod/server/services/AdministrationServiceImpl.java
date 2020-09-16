@@ -11,25 +11,25 @@ import java.rmi.RemoteException;
 
 public class AdministrationServiceImpl implements AdministrationService {
     private static final Logger logger = LoggerFactory.getLogger(AdministrationServiceImpl.class);
-    private Election election;
+    private final Election election;
 
     public AdministrationServiceImpl(Election election) {
         this.election = election;
     }
 
     @Override
-    public Status openElections() throws RemoteException, ElectionException {
+    public Status openElections() throws ElectionException {
         logger.info("Elections opened");
         return election.setStatus(Status.INITIALIZED);
     }
 
     @Override
-    public Status consultElectionStatus() throws RemoteException {
+    public Status consultElectionStatus() {
         return election.getStatus();
     }
 
     @Override
-    public Status finishElections() throws RemoteException, ElectionException {
+    public Status finishElections() throws ElectionException {
         logger.info("Elections closed");
         return election.setStatus(Status.FINISHED);
     }

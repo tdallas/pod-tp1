@@ -4,34 +4,33 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Candidate implements Serializable {
-    private String name;
-
-    public Candidate() {
-    }
+    private final Party party;
 
     public Candidate(final String name) {
-        this.name = name;
+        this.party = new Party(name);
     }
 
-    public String getName() {
-        return name;
+    public Party getParty() {
+        return this.party;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Candidate candidate = (Candidate) o;
-        return Objects.equals(name, candidate.name);
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        Candidate otherCandidate = (Candidate) other;
+
+        return Objects.equals(this.party.getName(), otherCandidate.getParty().getName());
     }
 
     @Override
     public String toString() {
-        return name;
+        return this.party.toString();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return this.party.hashCode();
     }
 }
