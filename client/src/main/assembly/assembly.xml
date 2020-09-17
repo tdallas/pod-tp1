@@ -20,10 +20,10 @@
 			<directory>src/main/assembly/overlay</directory>
 			<outputDirectory>/</outputDirectory>
 			<includes>
-				<include>run-consulting.sh</include>
 				<include>run-fiscal.sh</include>
 				<include>run-management.sh</include>
-				<include>run-voting.sh</include>
+				<include>run-query.sh</include>
+				<include>run-vote.sh</include>
 			</includes>
 			<fileMode>777</fileMode>
 			<filtered>false</filtered>
