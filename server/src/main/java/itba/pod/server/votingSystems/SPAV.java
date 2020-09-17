@@ -40,22 +40,26 @@ public class SPAV implements VotingCalculator{
                 //cuento los ganadores en una boleta
 
                 for (Ticket t : v.getTickets()) {
-                    //si hay algo en winners fijate si esta en la boleta para auemntar m
-                    if (winners.size() != 0) {
-                        if (winners.containsKey(t.getCandidate())) {
-                            m++;
+                    if (v.getTickets().indexOf(t) != v.getTickets().size()-1) { // last ticket is for FPTP
+                        //si hay algo en winners fijate si esta en la boleta para auemntar m
+                        if (winners.size() != 0) {
+                            if (winners.containsKey(t.getCandidate())) {
+                                m++;
 
+                            }
                         }
                     }
                 }
                 for (Ticket t : v.getTickets()) {
-                    //agrego el candidato a aux
-                    if (!winners.containsKey(t.getCandidate())) {
-                        if (aux.containsKey(t.getCandidate())) {
-                            Double app = aux.get(t.getCandidate());
-                            aux.put(t.getCandidate(), app + ((double) 1 / (1 + m)));
-                        } else {
-                            aux.put(t.getCandidate(), ((double) 1 / (1 + m)));
+                    if (v.getTickets().indexOf(t) != v.getTickets().size()-1) { // last ticket is for FPTP
+                        //agrego el candidato a aux
+                        if (!winners.containsKey(t.getCandidate())) {
+                            if (aux.containsKey(t.getCandidate())) {
+                                Double app = aux.get(t.getCandidate());
+                                aux.put(t.getCandidate(), app + ((double) 1 / (1 + m)));
+                            } else {
+                                aux.put(t.getCandidate(), ((double) 1 / (1 + m)));
+                            }
                         }
                     }
                 }
