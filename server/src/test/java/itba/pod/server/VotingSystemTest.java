@@ -104,18 +104,12 @@ public class VotingSystemTest {
         Map<Candidate,Double> thirdRunExpected = new LinkedHashMap<>();
         firstRunExpected.put(leopard,4.0);
         firstRunExpected.put(lynx,4.0);
-        firstRunExpected.put(buffalo,3.0);
         firstRunExpected.put(jackalope,3.0);
-        firstRunExpected.put(owl,1.0);
         firstRunExpected.put(tiger,1.0);
         secondRunExpected.put(lynx,2.0);
-        secondRunExpected.put(buffalo,1.5);
         secondRunExpected.put(jackalope,1.5);
-        secondRunExpected.put(owl,0.5);
         secondRunExpected.put(tiger,0.5);
-        thirdRunExpected.put(buffalo,1.0);
         thirdRunExpected.put(jackalope,1.0);
-        thirdRunExpected.put(owl,(double)1/3);
         thirdRunExpected.put(tiger,(double)1/3);
 
         expectd=sp.calculateScore();

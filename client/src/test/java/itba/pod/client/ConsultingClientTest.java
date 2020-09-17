@@ -91,7 +91,7 @@ public class ConsultingClientTest {
         List<Map<Candidate,Double>> expected=sp.calculateScore();
         assertEquals(leopard, expected.get(0).keySet().toArray()[0]);
         assertEquals(lynx, expected.get(0).keySet().toArray()[1]);
-        assertEquals(buffalo, expected.get(0).keySet().toArray()[2]);
+        assertEquals(jackalope, expected.get(0).keySet().toArray()[2]);
         //LEOPARD,LYNX,BUFFALO
     }
 
