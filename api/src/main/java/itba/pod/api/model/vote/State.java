@@ -17,4 +17,9 @@ public class State implements Serializable {
         State state1 = (State) o;
         return state.equals(state1.state);
     }
+
+    @Override
+    public String toString() {
+        return this.state;
+    }
 }

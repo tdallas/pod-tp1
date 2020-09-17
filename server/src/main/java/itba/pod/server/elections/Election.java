@@ -119,6 +119,10 @@ public class Election {
                 .stream()
                 .filter(v->v.getState().equals(state))
                 .collect(Collectors.toList());
+        if(filterStateVotes.size()==0){
+            readLock.unlock();
+            throw new ElectionException("No votes registered for "+state.toString());
+        }
         if (status == Status.INITIALIZED) {
             //parciales
             FPTP f = new FPTP(filterStateVotes);
@@ -140,6 +144,10 @@ public class Election {
                 .stream()
                 .filter(v->v.getTable().equals(table))
                 .collect(Collectors.toList());
+        if(filterStateVotes.size()==0){
+            readLock.unlock();
+            throw new ElectionException("No votes registered for "+table.toString());
+        }
         FPTP f = new FPTP(filterStateVotes);
         readLock.unlock();
         return new Results(status, f.calculateScore());
