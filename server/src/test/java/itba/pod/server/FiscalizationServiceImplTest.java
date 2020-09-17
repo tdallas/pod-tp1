@@ -91,7 +91,5 @@ public class FiscalizationServiceImplTest {
             election.setStatus(Status.INITIALIZED);
             election.emitVote(new Vote(table, capitalCity, ticketList));
         } catch (ElectionException ignored) {}
-
-        // Fixme: Check how to test this
     }
 }

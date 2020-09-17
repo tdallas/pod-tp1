@@ -8,6 +8,8 @@ import itba.pod.api.model.election.Status;
 import itba.pod.api.model.vote.Candidate;
 import itba.pod.api.model.vote.State;
 import itba.pod.api.model.vote.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,6 +23,8 @@ import java.util.List;
 import static java.lang.System.exit;
 
 public class ConsultingClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConsultingClient.class);
 
     public static void main(String[] args) {
         String serverAddress = System.getProperty("serverAddress");
@@ -55,7 +59,7 @@ public class ConsultingClient {
     static void CSVResults(Results results, String path, String state, String table) throws ClientException {
         int provinceRounds = 3;
         if (results.getStatus() == Status.NOT_INITIALIZED) {
-            throw new ClientException("Election not initialize");
+            throw new ClientException("Election not initialized");
         }
         try (FileWriter fw = new FileWriter(path)) {
             StringBuilder sb = new StringBuilder();
@@ -95,7 +99,7 @@ public class ConsultingClient {
             }
             fw.write(sb.toString());
         } catch (IOException e) {
-            e.printStackTrace();//todo handle error
+            logger.info("There was an error trying to write to write the results to a CSV");
         }
     }
 }

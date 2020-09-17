@@ -51,24 +51,20 @@ public class Election {
 
     // setStatus(NOT_INITIALIZED) is not a valid flow so there is no need to compute that logic
     public Status setStatus(final Status newStatus) throws ElectionException {
-        if (this.status.equals(newStatus)) {
-            // FIXME use custom exception pls
-            throw new ElectionException("Invalid status to set");
-        } else if (this.status.equals(Status.INITIALIZED) && newStatus.equals(Status.FINISHED)) {
-            // TODO calculate results etc etc
+        final Status currentStatus = this.getStatus();
+
+        if (newStatus.equals(currentStatus)) {
+            return currentStatus;
+        } else if (this.isStartingElection(newStatus)) {
+            return changeElectionStatus(newStatus);
+        } else if (this.isClosingElection(newStatus)) {
             tables.values().parallelStream().forEach(Table::close);
 
             return changeElectionStatus(newStatus);
-        } else if (this.status.equals(Status.NOT_INITIALIZED) && newStatus.equals(Status.INITIALIZED)) {
-            // Does this imply something more than only changing status?
-            return changeElectionStatus(newStatus);
         } else {
-            // FIXME use custom exception pls
             throw new ElectionException("The election status cannot be forcefully changed from " + this.status +
                     " to " + newStatus);
         }
-        // si el status a setear es finalizada --> calculo resultados?
-        // si el status a setear es abiertas (?) --> las abro
     }
 
     private Status changeElectionStatus(final Status status) {
@@ -90,7 +86,7 @@ public class Election {
         this.votes.add(vote);
         this.notifyVote(vote.getTable().getId(), vote.getFPTPCandidate().getParty());
         writeLock.unlock();
-        logger.info("Now there are {} votes", votes.size());
+        logger.info("Now there " + (votes.size() == 1 ? "is 1 vote" : ("are " + votes.size() + " votes")));
     }
 
     public Results getNationalResults() throws ElectionException {
@@ -195,10 +191,23 @@ public class Election {
             throw new ElectionException("No new fiscal can be registered after the start of the election");
 
         writeLock.lock();
-        if (!getTables().containsKey(tableId)) {
+
+        if (!getTables().containsKey(tableId))
             getTables().put(tableId, new Table(tableId));
-        }
+
         getTable(tableId).registerFiscal(fiscal);
         writeLock.unlock();
+    }
+
+    private boolean isStartingElection(final Status newStatus) {
+        return this.isStatusTransitioning(Status.NOT_INITIALIZED, Status.INITIALIZED, newStatus);
+    }
+
+    private boolean isClosingElection(final Status newStatus) {
+        return this.isStatusTransitioning(Status.INITIALIZED, Status.FINISHED, newStatus);
+    }
+
+    private boolean isStatusTransitioning(final Status from, final Status to, final Status status) {
+        return this.getStatus().equals(from) && status.equals(to);
     }
 }
