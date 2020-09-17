@@ -19,6 +19,13 @@
 		<fileSet>
 			<directory>src/main/assembly/overlay</directory>
 			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>run-consulting.sh</include>
+				<include>run-fiscal.sh</include>
+				<include>run-management.sh</include>
+				<include>run-voting.sh</include>
+			</includes>
+			<fileMode>777</fileMode>
 			<filtered>false</filtered>
 		</fileSet>
 		<fileSet>

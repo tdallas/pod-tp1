@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>pod-tp1-parent</artifactId>
-    <groupId>grupo09</groupId>
+    <groupId>itba.pod</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>pod-tp1-server</artifactId>
@@ -11,7 +11,7 @@
   <name>tpe1-g09-server</name>
   <dependencies>
     <dependency>
-      <groupId>grupo09</groupId>
+      <groupId>itba.pod</groupId>
       <artifactId>pod-tp1-api</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
@@ -49,7 +49,7 @@
                 <manifest>
                   <addClasspath>true</addClasspath>
                   <classpathPrefix>lib/</classpathPrefix>
-                  <mainClass>Server</mainClass>
+                  <mainClass>itba.pod.server.Server</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
