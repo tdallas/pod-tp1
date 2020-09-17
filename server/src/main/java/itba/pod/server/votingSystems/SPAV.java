@@ -28,7 +28,6 @@ public class SPAV implements VotingCalculator{
         return roundsNumber;
     }
 
-    // FIXME clean code pls. I think there must be a better way to do this
     public List<Map<Candidate, Double>> calculateScore() {
         Map<Candidate, Double> winners = new LinkedHashMap<>();
         Map<Candidate, Double> aux = new LinkedHashMap<>();

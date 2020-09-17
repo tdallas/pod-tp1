@@ -42,7 +42,6 @@ public class STAR implements VotingCalculator {
         return secondPercentage;
     }
 
-    // FIXME clean code pls. I think there must be a better way to do this
     public List<Map<Candidate, Double>> calculateScore() {
         scoringRound();
         automaticRunOff();

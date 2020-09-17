@@ -18,8 +18,6 @@ public class FPTP implements VotingCalculator {
         this.votes = votes;
     }
 
-
-    // FIXME clean code pls. I think there must be a better way to do this
     public List<Map<Candidate, Double>> calculateScore() {
         int size = votes.size();
         Map<Candidate, Double> winners = new LinkedHashMap<>();
