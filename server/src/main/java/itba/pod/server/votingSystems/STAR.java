@@ -57,7 +57,7 @@ public class STAR implements VotingCalculator {
         if (firstPercentage > secondPercentage) {
             aux.put(firstCandidate, firstPercentage);
             aux.put(secondCandidate, secondPercentage);
-        } else if (secondPercentage < firstPercentage) {
+        } else if (secondPercentage > firstPercentage) {
             aux.put(secondCandidate, secondPercentage);
             aux.put(firstCandidate, firstPercentage);
         } else {
