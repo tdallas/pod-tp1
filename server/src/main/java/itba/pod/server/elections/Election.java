@@ -117,7 +117,7 @@ public class Election {
         readLock.lock();
         List<Vote> filterStateVotes = votes
                 .stream()
-                .filter(v->v.getState().equals(state))
+                .filter(v -> v.getState().equals(state))
                 .collect(Collectors.toList());
         if (status == Status.INITIALIZED) {
             //parciales
@@ -138,7 +138,7 @@ public class Election {
         readLock.lock();
         List<Vote> filterStateVotes = votes
                 .stream()
-                .filter(v->v.getTable().equals(table))
+                .filter(v -> v.getTable().equals(table))
                 .collect(Collectors.toList());
         FPTP f = new FPTP(filterStateVotes);
         readLock.unlock();
@@ -181,5 +181,19 @@ public class Election {
         Status currentStatus = this.getStatus();
 
         return currentStatus == Status.INITIALIZED || currentStatus == Status.FINISHED;
+    }
+
+    public void registerFiscal(final long tableId, final Fiscal fiscal) throws ElectionException {
+        readLock.lock();
+        if (hasStarted())
+            throw new ElectionException("No new fiscal can be registered after the start of the election");
+        readLock.unlock();
+
+        writeLock.lock();
+        if (!getTables().containsKey(tableId)) {
+            getTables().put(tableId, new Table(tableId));
+        }
+        getTable(tableId).registerFiscal(fiscal);
+        writeLock.unlock();
     }
 }
