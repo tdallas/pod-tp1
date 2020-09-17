@@ -15,6 +15,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import static java.lang.System.exit;
+
 public class FiscalizationClient {
 
     private static final Logger logger = LoggerFactory.getLogger(FiscalizationClient.class);
@@ -43,9 +45,11 @@ public class FiscalizationClient {
 
             System.out.println(newFiscalRegisteredMsg);
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
-            logger.info("RMI failure while requesting the fiscalization service: " + e);
+            logger.error("RMI failure while requesting the fiscalization service: " + e);
+            exit(1);
         } catch (ElectionException e) {
-            logger.info("A problem has occurred while registering a new " + partyName + " fiscal: " + e);
+            logger.error("A problem has occurred while registering a new " + partyName + " fiscal: " + e);
+            exit(1);
         }
     }
 

@@ -18,13 +18,7 @@ public class FiscalizationServiceImpl implements FiscalizationService {
 
     @Override
     public String register(final long tableId, final Fiscal fiscal) throws ElectionException {
-        if (election.hasStarted())
-            throw new ElectionException("No new fiscal can be registered after the start of the election");
-
-        if (!election.getTables().containsKey(tableId))
-            election.getTables().put(tableId, new Table(tableId));
-
-        election.getTable(tableId).registerFiscal(fiscal);
+        election.registerFiscal(tableId, fiscal);
 
         String message = "Fiscal of " + fiscal.getParty().getName() + " registered on polling place " + tableId;
 
