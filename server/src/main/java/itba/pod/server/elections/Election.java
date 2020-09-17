@@ -179,15 +179,12 @@ public class Election {
 
     public boolean hasStarted() {
         Status currentStatus = this.getStatus();
-
         return currentStatus == Status.INITIALIZED || currentStatus == Status.FINISHED;
     }
 
     public void registerFiscal(final long tableId, final Fiscal fiscal) throws ElectionException {
-        readLock.lock();
         if (hasStarted())
             throw new ElectionException("No new fiscal can be registered after the start of the election");
-        readLock.unlock();
 
         writeLock.lock();
         if (!getTables().containsKey(tableId)) {
