@@ -3,20 +3,20 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>pod-tp1-parent</artifactId>
-    <groupId>grupo09</groupId>
+    <groupId>itba.pod</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>pod-tp1-client</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>pod-tp1-client</name>
+    <name>tpe1-g09-client</name>
   <dependencies>
     <dependency>
-      <groupId>grupo09</groupId>
+      <groupId>itba.pod</groupId>
       <artifactId>pod-tp1-api</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
       <dependency>
-          <groupId>grupo09</groupId>
+          <groupId>itba.pod</groupId>
           <artifactId>pod-tp1-server</artifactId>
           <version>1.0-SNAPSHOT</version>
           <scope>compile</scope>
@@ -64,8 +64,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-                <source>9</source>
-                <target>9</target>
+                <source>1.8</source>
+                <target>1.8</target>
             </configuration>
         </plugin>
     </plugins>

@@ -1,6 +1,23 @@
-# pod-tp1
+# Thread-safe remote voting system
 
-`mvn clean install`
+## Deploy
+`./deploy.sh deploy_directory`
+## Run server
+1. Run registry\
+`deploy_directory/server/run-registry.sh`
+2. Run server in new terminal\
+`deploy_directory/server/runServer.sh`
+## Run clients
+1. Administration client\
+`deploy_directory/client/run-management.sh -DserverAddress=​ xx.xx.xx.xx:yyyy​ -Daction=​ actionName`
+2. Voting client\
+`deploy_directory/client/run-vote -DserverAddress=​ xx.xx.xx.xx:yyyy​ -DvotesPath=​ fileName`
+3. Fiscalization client\
+`deploy_directory/client/run-fiscal -DserverAddress=xx.xx.xx.xx:yyyy -Did=​ pollingPlaceNumber
+ -Dparty=​ partyName`
+4. Consulting client\
+`deploy_directory/client/run-query -DserverAddress=​ xx.xx.xx.xx:yyyy​ [ -Dstate=​ stateName​ |
+ -Did=​ pollingPlaceNumber​ ] -DoutPath=​ fileName`
 
 # Dockerfile under /server
 That dockerfile is used for test purpose. We simulate an env where the service runs on another host in the network. It could also be used with port forwarding as a local host.
