@@ -67,8 +67,6 @@ public class VotingSystemTest {
     @Test
     public void STARTest() {
         List<Map<Candidate, Double>> m = s.calculateScore();
-        // TODO: Check if 'expected' is needed
-        List<Map<Candidate,Double>> expected = new LinkedList<>();
         Map<Candidate,Double> scoringExpected = new LinkedHashMap<>();
         Map<Candidate,Double> runoffExpected = new LinkedHashMap<>();
         scoringExpected.put(lynx,17.0);
@@ -79,8 +77,6 @@ public class VotingSystemTest {
         scoringExpected.put(buffalo,0.0);
         runoffExpected.put(jackalope,0.75);
         runoffExpected.put(lynx,0.25);
-        expected.add(scoringExpected);
-        expected.add(runoffExpected);
 
         assertEquals(scoringExpected, m.get(0));
         assertEquals(runoffExpected, m.get(1));
