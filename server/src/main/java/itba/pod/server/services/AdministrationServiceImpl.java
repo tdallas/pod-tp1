@@ -29,7 +29,7 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
-    public Status finishElections() throws ElectionException {
+    public Status closeElection() throws ElectionException {
         logger.info("Elections closed");
         return election.setStatus(Status.FINISHED);
     }

@@ -12,5 +12,5 @@ public interface AdministrationService extends Remote {
 
     Status consultElectionStatus() throws RemoteException;
 
-    Status finishElections() throws RemoteException, ElectionException;
+    Status closeElection() throws RemoteException, ElectionException;
 }

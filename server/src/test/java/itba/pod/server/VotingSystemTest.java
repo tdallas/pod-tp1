@@ -67,8 +67,6 @@ public class VotingSystemTest {
     @Test
     public void STARTest() {
         List<Map<Candidate, Double>> m = s.calculateScore();
-        // TODO: Check if 'expected' is needed
-        List<Map<Candidate,Double>> expected = new LinkedList<>();
         Map<Candidate,Double> scoringExpected = new LinkedHashMap<>();
         Map<Candidate,Double> runoffExpected = new LinkedHashMap<>();
         scoringExpected.put(lynx,17.0);
@@ -79,8 +77,6 @@ public class VotingSystemTest {
         scoringExpected.put(buffalo,0.0);
         runoffExpected.put(jackalope,0.75);
         runoffExpected.put(lynx,0.25);
-        expected.add(scoringExpected);
-        expected.add(runoffExpected);
 
         assertEquals(scoringExpected, m.get(0));
         assertEquals(runoffExpected, m.get(1));
@@ -98,7 +94,7 @@ public class VotingSystemTest {
 
     @Test
     public void SPAVTest() {
-        List<Map<Candidate,Double>> expectd;
+        List<Map<Candidate,Double>> expected;
         Map<Candidate,Double> firstRunExpected = new LinkedHashMap<>();
         Map<Candidate,Double> secondRunExpected = new LinkedHashMap<>();
         Map<Candidate,Double> thirdRunExpected = new LinkedHashMap<>();
@@ -112,11 +108,11 @@ public class VotingSystemTest {
         thirdRunExpected.put(jackalope,1.0);
         thirdRunExpected.put(tiger,(double)1/3);
 
-        expectd=sp.calculateScore();
-        assertEquals(firstRunExpected,expectd.get(0));
-        assertEquals(secondRunExpected,expectd.get(1));
-        assertEquals(thirdRunExpected,expectd.get(2));
-        System.out.println("SPAV\n"+expectd);
+        expected=sp.calculateScore();
+        assertEquals(firstRunExpected,expected.get(0));
+        assertEquals(secondRunExpected,expected.get(1));
+        assertEquals(thirdRunExpected,expected.get(2));
+        System.out.println("SPAV\n" + expected);
     }
 
 }
