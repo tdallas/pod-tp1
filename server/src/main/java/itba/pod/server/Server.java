@@ -29,16 +29,13 @@ public class Server {
 
     public static void main(String[] args) throws RemoteException {
         logger.info("Server Starting ...");
-        registerServices(System.getProperty("dockerized") != null);
+        registerServices();
     }
 
     /**
      * This function register every needed service.
-     * If isDockerized is true, then ports are fixed so we can exposed them when building dockerfile
-     *
-     * @param isDockerized
      */
-    private static void registerServices(final boolean isDockerized) {
+    private static void registerServices() {
         final Election election = new Election();
 
         final AdministrationService administrationService = new AdministrationServiceImpl(election);
@@ -47,16 +44,11 @@ public class Server {
         final FiscalizationService fiscalizationService = new FiscalizationServiceImpl(election);
 
         try {
-            final Registry registry = LocateRegistry.getRegistry("localhost");
-            final Remote remoteAdministration = UnicastRemoteObject.exportObject(administrationService,
-                    isDockerized ? ADMIN_SERVICE_PORT : 0);
-            final Remote remoteVoting = UnicastRemoteObject.exportObject(votingService,
-                    isDockerized ? VOTING_SERVICE_PORT : 0);
-            final Remote remoteConsulting = UnicastRemoteObject.exportObject(consultingService,
-                    isDockerized ? CONSULTING_SERVICE_PORT : 0);
-            final Remote remoteFiscalization = UnicastRemoteObject.exportObject(fiscalizationService,
-                    isDockerized ? FISCALIZATION_SERVICE_PORT : 0);
-
+            final Registry registry = LocateRegistry.getRegistry();
+            final Remote remoteAdministration = UnicastRemoteObject.exportObject(administrationService, 0);
+            final Remote remoteConsulting = UnicastRemoteObject.exportObject(consultingService,0);
+            final Remote remoteVoting = UnicastRemoteObject.exportObject(votingService,0);
+            final Remote remoteFiscalization = UnicastRemoteObject.exportObject(fiscalizationService,0);
 
             registry.rebind("administration-service", remoteAdministration);
             logger.info("Administration service bound");

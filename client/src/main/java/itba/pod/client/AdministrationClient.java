@@ -3,6 +3,8 @@ package itba.pod.client;
 import itba.pod.api.interfaces.AdministrationService;
 import itba.pod.api.model.election.ElectionException;
 import itba.pod.api.model.election.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.rmi.Naming;
@@ -19,7 +21,6 @@ public class AdministrationClient {
     public static void main(final String[] args) {
         String serverAddress = System.getProperty("serverAddress");
         String actionName = System.getProperty("action");
-
         try {
             final AdministrationService administrationService =
                     (AdministrationService) Naming.lookup("//" + serverAddress + "/administration-service");
