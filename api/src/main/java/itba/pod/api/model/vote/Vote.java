@@ -1,15 +1,16 @@
 package itba.pod.api.model.vote;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Vote implements Serializable {
     private final Table table;
     private final State state;
     // first 3(i = [0,1,2]) are for STAR and SPAV, the last one is for FPTP
-    private final List<Ticket> tickets;
+    private  List<Ticket> tickets;
 
-    public Vote(final Table table, final State state, final List<Ticket> tickets) {
+    public Vote(final Table table, final State state,  List<Ticket> tickets) {
         this.table = table;
         this.state = state;
         this.tickets = tickets;
@@ -18,6 +19,11 @@ public class Vote implements Serializable {
     public Vote(final List<Ticket> tickets) {
         this.state = null;
         this.table = null;
+        this.tickets = tickets;
+    }
+
+
+    public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
 
@@ -50,6 +56,10 @@ public class Vote implements Serializable {
         return table != null && state != null && table.equals(vote.table) &&
                 state.equals(vote.state) &&
                 tickets.equals(vote.tickets);
+    }
+
+    public Vote clone(){
+        return new Vote(this.table,this.state,this.tickets);
     }
 
 }

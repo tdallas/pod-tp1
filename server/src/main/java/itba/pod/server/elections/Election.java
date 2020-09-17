@@ -100,7 +100,15 @@ public class Election {
             readLock.unlock();
             return new Results(status, f.calculateScore());
         } else {
-            STAR s = new STAR(votes);
+            List<Vote> n = new LinkedList<>();
+            for(Vote v:votes){
+                n.add(v.clone());
+            }
+            for(Vote v:n){
+                v.setTickets(new LinkedList<>(v.getTickets()).subList(0,v.getTickets().size()-1));
+            }
+
+            STAR s = new STAR(n);
             readLock.unlock();
             return new Results(status, s.calculateScore());
         }
