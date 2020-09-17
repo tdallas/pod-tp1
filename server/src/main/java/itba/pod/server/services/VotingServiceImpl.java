@@ -18,6 +18,6 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public void emitVote(Vote vote) throws ElectionException {
         election.emitVote(vote);
-        logger.info("Emitting " + vote.toString());
+        logger.info("Vote emitted for " + vote.toString());
     }
 }

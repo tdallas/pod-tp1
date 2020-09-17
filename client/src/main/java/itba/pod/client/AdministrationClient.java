@@ -42,9 +42,9 @@ public class AdministrationClient {
             }
             System.out.println(electionStatus);
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
-            logger.info("RMI failure while requesting the administration service: " + e);
+            logger.error("RMI failure while requesting the administration service: " + e);
         } catch (ElectionException e) {
-            logger.info(e.toString());
+            logger.error(e.toString());
         }
 
     }
